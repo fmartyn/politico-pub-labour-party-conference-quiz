@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
-import { eventSlug } from "@/lib/quiz";
+import { eventName, eventSlug, getResultMeta } from "@/lib/quiz";
 
 type QuizExperienceProps = {
   questions: Question[];
@@ -18,6 +18,7 @@ const initialDemographics: DemographicFields = {
   lastName: "",
   company: "",
   jobTitle: "",
+  enterPrizeDraw: false,
   consentMarketing: true,
 };
 
@@ -25,7 +26,7 @@ export function QuizExperience({
   questions,
   capturePosition,
 }: QuizExperienceProps) {
-  const [step, setStep] = useState(capturePosition === "start" ? -1 : 0);
+  const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [demographics, setDemographics] =
     useState<DemographicFields>(initialDemographics);
@@ -33,17 +34,19 @@ export function QuizExperience({
   const [errorMessage, setErrorMessage] = useState("");
   const [score, setScore] = useState<number | null>(null);
 
-  const totalSteps = questions.length + 1;
-  const displayStep = capturePosition === "start" ? step + 2 : step + 1;
-  const isCaptureStep =
-    capturePosition === "start" ? step === -1 : step === questions.length;
+  const totalSteps = questions.length + 2;
+  const displayStep = step + 2;
+  const isIntroStep = step === -1;
+  const isPrizeStep = step === questions.length;
   const activeQuestion = step >= 0 && step < questions.length ? questions[step] : null;
   const canAdvance = activeQuestion ? Boolean(answers[activeQuestion.id]) : true;
   const canStartQuiz =
-    demographics.firstName.trim() &&
-    demographics.lastName.trim() &&
     demographics.email.trim() &&
-    demographics.company.trim();
+    demographics.company.trim() &&
+    demographics.jobTitle.trim();
+  const canSubmit =
+    !demographics.enterPrizeDraw ||
+    (demographics.firstName.trim() && demographics.lastName.trim());
 
   function updateDemographicField<K extends keyof DemographicFields>(
     field: K,
@@ -118,21 +121,30 @@ export function QuizExperience({
 
   async function submitQuiz(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
+
+    if (!canSubmit) {
+      setSubmissionState("error");
+      setErrorMessage("Add your first and last name to enter the prize draw.");
+      return;
+    }
+
     await persistSubmission();
   }
 
+  const result = score !== null ? getResultMeta(score) : null;
+
   return (
     <div className="relative">
-      <div className="absolute -inset-4 rounded-[2rem] bg-[linear-gradient(135deg,rgba(255,209,102,0.28),rgba(119,209,197,0.16),rgba(255,107,107,0.18))] blur-2xl" />
+      <div className="absolute -inset-4 rounded-[2rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.26),rgba(217,54,50,0.18),rgba(255,143,120,0.16))] blur-2xl" />
       <div className="relative rounded-[2rem] border border-white/12 bg-[var(--panel)] p-5 shadow-[var(--shadow)] backdrop-blur-2xl sm:p-7">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-              Survey flow
+              Game flow
             </p>
             <p className="mt-2 text-lg font-medium text-white">
               {submissionState === "success"
-                ? "Survey complete"
+                ? "Quiz complete"
                 : `Step ${Math.min(displayStep, totalSteps)} of ${totalSteps}`}
             </p>
           </div>
@@ -152,54 +164,47 @@ export function QuizExperience({
             className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
           >
               <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
-                Thanks for taking part
+                Score locked
               </div>
-              <h2 className="text-3xl font-semibold">You are in.</h2>
+              <h2 className="text-3xl font-semibold">{result?.title ?? "Political Pro-Quiz complete"}</h2>
               <p className="text-base leading-7 text-white/72">
-                Thanks for sharing your reading preferences. We will use responses to shape future experiences, and selected participants may hear more about a POLITICO Pro trial or related offers.
+                {result?.description ??
+                  `Thanks for playing ${eventName}.`}
               </p>
               {score !== null ? (
                 <div className="rounded-3xl border border-white/10 bg-white/6 p-5">
                   <p className="text-sm uppercase tracking-[0.25em] text-white/50">
-                    Interest score
+                    Your score
                   </p>
                   <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
                 </div>
               ) : null}
+              <p className="text-sm leading-7 text-white/60">
+                {demographics.enterPrizeDraw
+                  ? "Your prize draw entry has been saved."
+                  : "You skipped the prize draw, but your quiz score is safely recorded."}
+              </p>
           </div>
-        ) : isCaptureStep ? (
+        ) : isIntroStep ? (
           <form
-            key="capture"
-            onSubmit={capturePosition === "end" ? submitQuiz : undefined}
+            key="intro"
             className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
           >
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-                  Stay connected
+                  Step one
                 </p>
                 <h2 className="text-3xl font-semibold">
-                  Add your details for a chance to hear more.
+                  Start with your work details.
                 </h2>
                 <p className="text-sm leading-7 text-white/68">
-                  Complete the survey with a few details so we can contact you if you are selected for a trial, sample, or future POLITICO Pro update.
+                  Enter your email, organisation, and role to unlock the quiz.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field
-                  label="First name"
-                  value={demographics.firstName}
-                  onChange={(value) => updateDemographicField("firstName", value)}
-                  required
-                />
-                <Field
-                  label="Last name"
-                  value={demographics.lastName}
-                  onChange={(value) => updateDemographicField("lastName", value)}
-                  required
-                />
-                <Field
-                  label="Work email"
+                  label="Email"
                   inputType="email"
                   value={demographics.email}
                   onChange={(value) => updateDemographicField("email", value)}
@@ -215,6 +220,7 @@ export function QuizExperience({
                   label="Role"
                   value={demographics.jobTitle}
                   onChange={(value) => updateDemographicField("jobTitle", value)}
+                  required
                 />
               </div>
 
@@ -228,7 +234,7 @@ export function QuizExperience({
                   }
                 />
                 <span>
-                  I am happy to receive follow-up messages about POLITICO Pro content, trials, and related updates.
+                  Keep me posted on POLITICO Pro updates and related offers.
                 </span>
               </label>
 
@@ -239,25 +245,83 @@ export function QuizExperience({
               ) : null}
 
               <div className="flex flex-wrap gap-3">
-                {capturePosition === "start" ? (
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!canStartQuiz}
-                    className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffb703)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    Start the quiz
-                  </button>
-                ) : (
-                  <button
-                    type="submit"
-                    disabled={submissionState === "submitting"}
-                    className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffb703)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {submissionState === "submitting" ? "Submitting..." : "Complete survey"}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={!canStartQuiz}
+                  className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  Play now
+                </button>
               </div>
+          </form>
+        ) : isPrizeStep ? (
+          <form
+            key="prize"
+            onSubmit={submitQuiz}
+            className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
+          >
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-[0.3em] text-white/55">
+                Final step
+              </p>
+              <h2 className="text-3xl font-semibold">
+                Want to enter the prize draw?
+              </h2>
+              <p className="text-sm leading-7 text-white/68">
+                Add your first and last name if you want to be included.
+              </p>
+            </div>
+
+            <label className="flex items-start gap-3 rounded-3xl border border-white/10 bg-white/6 p-4 text-sm text-white/74">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
+                checked={demographics.enterPrizeDraw}
+                onChange={(event) =>
+                  updateDemographicField("enterPrizeDraw", event.target.checked)
+                }
+              />
+              <span>Yes, enter me into the prize draw.</span>
+            </label>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field
+                label="First name"
+                value={demographics.firstName}
+                onChange={(value) => updateDemographicField("firstName", value)}
+                required={demographics.enterPrizeDraw}
+              />
+              <Field
+                label="Last name"
+                value={demographics.lastName}
+                onChange={(value) => updateDemographicField("lastName", value)}
+                required={demographics.enterPrizeDraw}
+              />
+            </div>
+
+            {errorMessage ? (
+              <p className="rounded-2xl border border-red-300/20 bg-red-400/10 px-4 py-3 text-sm text-red-100">
+                {errorMessage}
+              </p>
+            ) : null}
+
+            <div className="flex flex-wrap justify-between gap-3">
+              <button
+                type="button"
+                onClick={previousStep}
+                className="rounded-full border border-white/14 px-5 py-3 text-sm font-medium text-white/74 transition hover:bg-white/7"
+              >
+                Back
+              </button>
+              <button
+                type="submit"
+                disabled={submissionState === "submitting"}
+                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {submissionState === "submitting" ? "Submitting..." : "Finish game"}
+              </button>
+            </div>
           </form>
         ) : (
           <div
@@ -266,13 +330,13 @@ export function QuizExperience({
           >
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-                  Question {step + 1}
+                  Quick-fire round
                 </p>
                 <h2 className="text-3xl font-semibold">{activeQuestion?.prompt}</h2>
               </div>
 
-              <div className="grid gap-3">
-                {activeQuestion?.options.map((option) => {
+              <div className="quiz-grid">
+                {activeQuestion?.options.map((option, index) => {
                   const selected = answers[activeQuestion.id] === option.label;
 
                   return (
@@ -286,12 +350,19 @@ export function QuizExperience({
                           : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
                       }`}
                     >
-                      <span className="block text-base font-medium text-white">
-                        {option.label}
-                      </span>
-                      <span className="mt-2 block text-sm leading-6 text-white/66">
-                        {option.description}
-                      </span>
+                      <div className="flex items-start gap-3">
+                        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/6 text-sm font-semibold text-white">
+                          {String.fromCharCode(65 + index)}
+                        </span>
+                        <div>
+                          <span className="block text-base font-medium text-white">
+                            {option.label}
+                          </span>
+                          <span className="mt-2 block text-sm leading-6 text-white/66">
+                            {option.description}
+                          </span>
+                        </div>
+                      </div>
                     </button>
                   );
                 })}
@@ -313,25 +384,14 @@ export function QuizExperience({
                   Back
                 </button>
 
-                {step === questions.length - 1 && capturePosition === "start" ? (
-                  <button
-                    type="button"
-                    onClick={() => void persistSubmission()}
-                    disabled={!canAdvance || submissionState === "submitting"}
-                    className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),#b8f2e6)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {submissionState === "submitting" ? "Submitting..." : "Continue"}
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={nextStep}
-                    disabled={!canAdvance}
-                    className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),#ff867f)] px-6 py-3 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {step === questions.length - 1 ? "Continue" : "Next question"}
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={nextStep}
+                  disabled={!canAdvance}
+                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-6 py-3 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {step === questions.length - 1 ? "Prize draw" : "Next question"}
+                </button>
               </div>
           </div>
         )}

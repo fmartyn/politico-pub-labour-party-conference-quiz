@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-export const eventName = "Are You a POLITICO Pro?";
-export const eventSlug = "politico-pro-content-survey";
+export const eventName = "Political Pro-Quiz";
+export const eventSlug = "political-pro-quiz-playbook";
 export type CapturePosition = "start" | "end";
 
-export const capturePosition: CapturePosition = "end";
+export const capturePosition: CapturePosition = "start";
 
 export type Question = {
   id: string;
@@ -18,107 +18,107 @@ export type Question = {
 
 export const questions: Question[] = [
   {
-    id: "news_start",
-    prompt: "When you open your inbox in the morning, what kind of coverage are you most likely to click first?",
+    id: "prime_ministers",
+    prompt: "How many UK prime ministers have there been since January 2020?",
     options: [
       {
-        label: "A sharp policy briefing",
-        description: "You want the core developments fast, with enough context to act on them.",
+        label: "Three",
+        description: "Close, but one key name is missing from the recent carousel.",
+        weight: 1,
+      },
+      {
+        label: "Four",
+        description: "Correct. Johnson, Truss, Sunak, and Starmer have all held No. 10 in that span.",
         weight: 3,
       },
       {
-        label: "A smartly curated newsletter",
-        description: "You like a strong point of view and a quick read on what matters.",
-        weight: 2,
-      },
-      {
-        label: "A headline scan",
-        description: "You want the broad picture before deciding what deserves deeper attention.",
-        weight: 1,
+        label: "Five",
+        description: "A fair guess, but Westminster has not moved quite that fast.",
+        weight: 0,
       },
     ],
   },
   {
-    id: "policy_depth",
-    prompt: "How deep do you usually want a story to go once a policy issue catches your attention?",
+    id: "pmqs",
+    prompt: "What does PMQs stand for?",
     options: [
       {
-        label: "Show me the implications, stakeholders, and next moves",
-        description: "You care about what changes, who matters, and what happens next.",
+        label: "Prime Minister's Questions",
+        description: "Correct. The weekly Commons set-piece remains one of Westminster's best-known rituals.",
         weight: 3,
       },
       {
-        label: "Give me the essential context and the big takeaway",
-        description: "You want enough depth to stay informed without reading a full dossier.",
-        weight: 2,
+        label: "Parliamentary Media Queries",
+        description: "Good acronym energy, but not a real Commons fixture.",
+        weight: 0,
       },
       {
-        label: "Keep it light unless it becomes a major story",
-        description: "You follow policy, but only a few developments merit serious time.",
-        weight: 1,
+        label: "Public Mandate Quotient",
+        description: "That sounds like a think-tank slide, not a House proceeding.",
+        weight: 0,
       },
     ],
   },
   {
-    id: "topic_interest",
-    prompt: "Which area would you most want more premium reporting on right now?",
+    id: "green_paper",
+    prompt: "In UK policymaking, what is a green paper usually meant to do?",
     options: [
       {
-        label: "Tech, AI, and digital policy",
-        description: "You are tracking regulation, competition, and where policy meets innovation.",
+        label: "Launch a consultation and float options",
+        description: "Correct. A green paper generally tests ideas before firmer legislative moves.",
         weight: 3,
       },
       {
-        label: "Energy, climate, and infrastructure",
-        description: "You want sharper reporting on the forces shaping the transition.",
-        weight: 2,
+        label: "Announce a final government decision",
+        description: "That is closer to where a white paper or bill lands.",
+        weight: 0,
       },
       {
-        label: "Congress, campaigns, and political power",
-        description: "You follow the political machinery behind the public headlines.",
-        weight: 1,
+        label: "Trigger an immediate vote in both Houses",
+        description: "Not at this stage. It is more about consultation than conclusion.",
+        weight: 0,
       },
     ],
   },
   {
-    id: "reading_style",
-    prompt: "What makes a piece of coverage feel especially valuable to you?",
+    id: "statutory_instrument",
+    prompt: "Which answer best describes a statutory instrument?",
     options: [
       {
-        label: "Exclusive reporting I cannot get elsewhere",
-        description: "Originality matters most. You want insight with a reason to pay attention.",
+        label: "A form of secondary legislation made under powers granted by an Act",
+        description: "Correct. This is classic delegated legislation territory.",
         weight: 3,
       },
       {
-        label: "Analysis that connects the dots clearly",
-        description: "You value synthesis and explanation more than volume.",
-        weight: 2,
+        label: "A formal coalition agreement between parties",
+        description: "That might be politically useful, but it is not a statutory instrument.",
+        weight: 0,
       },
       {
-        label: "Speed and convenience",
-        description: "If it gets you the key takeaway quickly, it has done its job.",
-        weight: 1,
+        label: "A private member's bill that has passed both Houses",
+        description: "This answer confuses an Act with the delegated rules that follow from it.",
+        weight: 0,
       },
     ],
   },
   {
-    id: "trial_interest",
-    prompt: "If you were offered a chance to explore POLITICO Pro further, what would be most appealing?",
+    id: "kings_speech",
+    prompt: "Which annual event sets out the UK government's planned legislative agenda?",
     options: [
       {
-        label: "A free trial to explore the reporting firsthand",
-        description: "You want to see how the full experience fits into your regular reading habits.",
+        label: "The King's Speech",
+        description: "Correct. It outlines the government's intended programme for the parliamentary session.",
         weight: 3,
       },
       {
-        label: "A curated sample built around my interests",
-        description: "You would rather start with a tailored taste than a blank slate.",
-        weight: 2,
+        label: "The Autumn Statement",
+        description: "Important, but focused on fiscal policy rather than the whole legislative slate.",
+        weight: 0,
       },
       {
-        label: "Just keep me posted on standout coverage",
-        description: "You are interested, but prefer a lighter-touch relationship for now.",
-        weight: 1,
+        label: "The Speaker's Procession",
+        description: "Ceremonial, yes. Agenda-setting, no.",
+        weight: 0,
       },
     ],
   },
@@ -136,21 +136,72 @@ export const submissionSchema = z.object({
   quizVersion: z.string().min(1),
   capturePosition: z.enum(["start", "end"]),
   email: z.string().email(),
-  firstName: z.string().trim().min(1),
-  lastName: z.string().trim().min(1),
+  firstName: z.string().trim().optional().default(""),
+  lastName: z.string().trim().optional().default(""),
   company: z.string().trim().min(1),
-  jobTitle: z.string().trim().optional().default(""),
+  jobTitle: z.string().trim().min(1),
+  enterPrizeDraw: z.boolean(),
   consentMarketing: z.boolean(),
   answers: z.array(answerSchema).length(5),
+}).superRefine((value, context) => {
+  if (value.enterPrizeDraw && !value.firstName.trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["firstName"],
+      message: "First name is required to enter the prize draw.",
+    });
+  }
+
+  if (value.enterPrizeDraw && !value.lastName.trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["lastName"],
+      message: "Last name is required to enter the prize draw.",
+    });
+  }
 });
 
 export type AnswerInput = z.infer<typeof answerSchema>;
 export type SubmissionInput = z.infer<typeof submissionSchema>;
 export type DemographicFields = Pick<
   SubmissionInput,
-  "email" | "firstName" | "lastName" | "company" | "jobTitle" | "consentMarketing"
+  | "email"
+  | "firstName"
+  | "lastName"
+  | "company"
+  | "jobTitle"
+  | "enterPrizeDraw"
+  | "consentMarketing"
 >;
 
 export function scoreAnswers(answers: AnswerInput[]) {
   return answers.reduce((total, answer) => total + answer.weight, 0);
+}
+
+export function getResultMeta(score: number) {
+  if (score >= 13) {
+    return {
+      title: "Lobby Legend",
+      description: "You read the room, the order paper, and probably the footnotes too.",
+    };
+  }
+
+  if (score >= 9) {
+    return {
+      title: "Policy Operator",
+      description: "You are clearly fluent in the rhythms of Westminster and Whitehall.",
+    };
+  }
+
+  if (score >= 5) {
+    return {
+      title: "Committee Room Contender",
+      description: "You know your way around the basics and you are one briefing away from sharp form.",
+    };
+  }
+
+  return {
+    title: "Headline Skimmer",
+    description: "You have the instincts. Now you just need a little more Westminster edge.",
+  };
 }

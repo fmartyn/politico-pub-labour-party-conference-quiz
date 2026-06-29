@@ -27,8 +27,8 @@ export async function POST(request: Request) {
       ) VALUES (
         ${parsed.eventSlug},
         ${parsed.email},
-        ${parsed.firstName},
-        ${parsed.lastName},
+        ${parsed.firstName || ""},
+        ${parsed.lastName || ""},
         ${parsed.company},
         ${parsed.jobTitle},
         ${parsed.consentMarketing},
