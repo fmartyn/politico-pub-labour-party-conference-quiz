@@ -146,22 +146,18 @@ export function QuizExperience({
   }
 
   const result = score !== null ? getResultMeta(score) : null;
+  const statusLabel = submissionState === "success"
+    ? "Complete"
+    : isPrizeStep
+      ? "Tell us about you"
+      : `Question ${step + 1} of ${questions.length}`;
 
   return (
     <div className="relative">
       <div className="absolute -inset-4 rounded-[2rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.26),rgba(217,54,50,0.18),rgba(255,143,120,0.16))] blur-2xl" />
       <div className="relative rounded-[2rem] border border-white/12 bg-[var(--panel)] p-5 shadow-[var(--shadow)] backdrop-blur-2xl sm:p-7">
         <div className="mb-6 flex items-center justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-              Game flow
-            </p>
-            <p className="mt-2 text-lg font-medium text-white">
-              {submissionState === "success"
-                ? "Quiz complete"
-                : `Step ${Math.min(displayStep, totalSteps)} of ${totalSteps}`}
-            </p>
-          </div>
+          <p className="text-lg font-medium text-white">{statusLabel}</p>
           <div className="h-2 w-28 overflow-hidden rounded-full bg-white/10">
             <div
               style={{
@@ -206,9 +202,6 @@ export function QuizExperience({
             className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
           >
             <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-                Final step
-              </p>
               <h2 className="text-3xl font-semibold">
                 Get your score by email and enter the prize draw.
               </h2>
@@ -343,12 +336,7 @@ export function QuizExperience({
             key={activeQuestion?.id}
             className="space-y-6 [animation:fade-in-up_0.35s_ease-out]"
           >
-              <div className="space-y-2">
-                <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-                  Quick-fire round
-                </p>
-                <h2 className="text-3xl font-semibold">{activeQuestion?.prompt}</h2>
-              </div>
+              <h2 className="text-3xl font-semibold">{activeQuestion?.prompt}</h2>
 
               <div className="quiz-grid">
                 {activeQuestion?.options.map((option, index) => {
