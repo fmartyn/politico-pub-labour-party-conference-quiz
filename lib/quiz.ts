@@ -28,7 +28,7 @@ export const questions: Question[] = [
       },
       {
         label: "Four",
-        description: "Correct. Johnson, Truss, Sunak, and Starmer have all held No. 10 in that span.",
+        description: "Johnson, Truss, Sunak, and Starmer have all held No. 10 in that span.",
         weight: 3,
       },
       {
@@ -44,7 +44,7 @@ export const questions: Question[] = [
     options: [
       {
         label: "Prime Minister's Questions",
-        description: "Correct. The weekly Commons set-piece remains one of Westminster's best-known rituals.",
+        description: "The weekly Commons set-piece remains one of Westminster's best-known rituals.",
         weight: 3,
       },
       {
@@ -65,7 +65,7 @@ export const questions: Question[] = [
     options: [
       {
         label: "Launch a consultation and float options",
-        description: "Correct. A green paper generally tests ideas before firmer legislative moves.",
+        description: "A green paper generally tests ideas before firmer legislative moves.",
         weight: 3,
       },
       {
@@ -86,7 +86,7 @@ export const questions: Question[] = [
     options: [
       {
         label: "A form of secondary legislation made under powers granted by an Act",
-        description: "Correct. This is classic delegated legislation territory.",
+        description: "This is classic delegated legislation territory.",
         weight: 3,
       },
       {
@@ -107,7 +107,7 @@ export const questions: Question[] = [
     options: [
       {
         label: "The King's Speech",
-        description: "Correct. It outlines the government's intended programme for the parliamentary session.",
+        description: "It outlines the government's intended programme for the parliamentary session.",
         weight: 3,
       },
       {
