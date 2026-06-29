@@ -154,11 +154,11 @@ export function QuizExperience({
 
   return (
     <div className="relative">
-      <div className="absolute -inset-4 rounded-[2rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.26),rgba(217,54,50,0.18),rgba(255,143,120,0.16))] blur-2xl" />
-      <div className="relative rounded-[2rem] border border-white/12 bg-[var(--panel)] p-5 shadow-[var(--shadow)] backdrop-blur-2xl sm:p-7">
-        <div className="mb-6 flex items-center justify-between gap-4">
-          <p className="text-lg font-medium text-white">{statusLabel}</p>
-          <div className="h-2 w-28 overflow-hidden rounded-full bg-white/10">
+      <div className="absolute -inset-2 rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.2),rgba(217,54,50,0.16),rgba(255,143,120,0.12))] blur-xl sm:-inset-4 sm:rounded-[2rem] sm:blur-2xl" />
+      <div className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6">
+        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6 sm:gap-4">
+          <p className="text-sm font-medium text-white sm:text-lg">{statusLabel}</p>
+          <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10 sm:h-2 sm:w-28">
             <div
               style={{
                 width: `${submissionState === "success" ? 100 : (Math.min(displayStep, totalSteps) / totalSteps) * 100}%`,
@@ -171,25 +171,25 @@ export function QuizExperience({
         {submissionState === "success" ? (
           <div
             key="success"
-            className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
+            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-5"
           >
               <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
                 Score locked
               </div>
-              <h2 className="text-3xl font-semibold">{result?.title ?? "Political Pro-Quiz complete"}</h2>
-              <p className="text-base leading-7 text-white/72">
+              <h2 className="text-2xl font-semibold sm:text-3xl">{result?.title ?? "Political Pro-Quiz complete"}</h2>
+              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7">
                 {result?.description ??
                   `Thanks for playing ${eventName}.`}
               </p>
               {score !== null ? (
-                <div className="rounded-3xl border border-white/10 bg-white/6 p-5">
+                <div className="rounded-2xl border border-white/10 bg-white/6 p-4 sm:rounded-3xl sm:p-5">
                   <p className="text-sm uppercase tracking-[0.25em] text-white/50">
                     Your score
                   </p>
                   <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
                 </div>
               ) : null}
-              <p className="text-sm leading-7 text-white/60">
+              <p className="text-sm leading-6 text-white/60 sm:leading-7">
                 {demographics.enterPrizeDraw
                   ? "Your prize draw entry has been saved."
                   : "You skipped the prize draw, but your quiz score is safely recorded."}
@@ -199,19 +199,19 @@ export function QuizExperience({
           <form
             key="prize"
             onSubmit={submitQuiz}
-            className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
+            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-5"
           >
             <div className="space-y-2">
-              <h2 className="text-3xl font-semibold">
+              <h2 className="text-2xl font-semibold sm:text-3xl">
                 Get your score by email and enter the prize draw.
               </h2>
-              <p className="text-sm leading-7 text-white/68">
+              <p className="text-sm leading-6 text-white/68 sm:leading-7">
                 Add your work details so we can send your result. If you want to be entered into the draw, add your first and last name too.
               </p>
             </div>
 
             {score !== null ? (
-              <div className="rounded-3xl border border-white/10 bg-white/6 p-5">
+              <div className="rounded-2xl border border-white/10 bg-white/6 p-4 sm:rounded-3xl sm:p-5">
                 <p className="text-sm uppercase tracking-[0.25em] text-white/50">
                   Your score
                 </p>
@@ -222,7 +222,7 @@ export function QuizExperience({
               </div>
             ) : null}
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
               <Field
                 label="Email"
                 inputType="email"
@@ -244,7 +244,7 @@ export function QuizExperience({
               />
             </div>
 
-            <label className="flex items-start gap-3 rounded-3xl border border-white/10 bg-white/6 p-4 text-sm text-white/74">
+            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -258,7 +258,7 @@ export function QuizExperience({
               </span>
             </label>
 
-            <label className="flex items-start gap-3 rounded-3xl border border-white/10 bg-white/6 p-4 text-sm text-white/74">
+            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -281,7 +281,7 @@ export function QuizExperience({
               </span>
             </label>
 
-            <label className="flex items-start gap-3 rounded-3xl border border-white/10 bg-white/6 p-4 text-sm text-white/74">
+            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -293,7 +293,7 @@ export function QuizExperience({
               <span>Yes, enter me into the prize draw.</span>
             </label>
 
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
               <Field
                 label="First name"
                 value={demographics.firstName}
@@ -314,7 +314,7 @@ export function QuizExperience({
               </p>
             ) : null}
 
-            <div className="flex flex-wrap justify-between gap-3">
+            <div className="flex flex-wrap justify-between gap-3 pt-1">
               <button
                 type="button"
                 onClick={previousStep}
@@ -334,9 +334,11 @@ export function QuizExperience({
         ) : (
           <div
             key={activeQuestion?.id}
-            className="space-y-6 [animation:fade-in-up_0.35s_ease-out]"
+            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-6"
           >
-              <h2 className="text-3xl font-semibold">{activeQuestion?.prompt}</h2>
+              <h2 className="text-[1.35rem] font-semibold leading-[1.15] sm:text-3xl">
+                {activeQuestion?.prompt}
+              </h2>
 
               <div className="quiz-grid">
                 {activeQuestion?.options.map((option, index) => {
@@ -347,21 +349,21 @@ export function QuizExperience({
                       key={option.label}
                       type="button"
                       onClick={() => handleAnswer(activeQuestion.id, option.label)}
-                      className={`rounded-3xl border p-4 text-left transition ${
+                      className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 ${
                         selected
                           ? "border-[var(--accent)] bg-white/12"
                           : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
                       }`}
                     >
                       <div className="flex items-start gap-3">
-                        <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/6 text-sm font-semibold text-white">
+                        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/6 text-xs font-semibold text-white sm:h-8 sm:w-8 sm:text-sm">
                           {String.fromCharCode(65 + index)}
                         </span>
                         <div>
-                          <span className="block text-base font-medium text-white">
+                          <span className="block text-sm font-medium text-white sm:text-base">
                             {option.label}
                           </span>
-                          <span className="mt-2 block text-sm leading-6 text-white/66">
+                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6">
                             {option.description}
                           </span>
                         </div>
@@ -377,12 +379,12 @@ export function QuizExperience({
                 </p>
               ) : null}
 
-              <div className="flex flex-wrap justify-between gap-3">
+              <div className="flex flex-wrap justify-between gap-3 pt-1">
                 <button
                   type="button"
                   onClick={previousStep}
                   disabled={step === 0 && capturePosition === "end"}
-                  className="rounded-full border border-white/14 px-5 py-3 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35"
+                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-3"
                 >
                   Back
                 </button>
@@ -391,7 +393,7 @@ export function QuizExperience({
                   type="button"
                   onClick={nextStep}
                   disabled={!canAdvance}
-                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-6 py-3 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
                 >
                   {step === questions.length - 1 ? "Prize draw" : "Next question"}
                 </button>
