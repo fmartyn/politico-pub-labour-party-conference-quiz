@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Political Pro-Quiz",
-  description: "A gamified POLITICO Pro quiz for Playbook London with Neon-backed submission capture.",
+  description: "A quiz for aspiring politicos.",
 };
 
 export default function RootLayout({
