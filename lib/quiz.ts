@@ -4,7 +4,7 @@ export const eventName = "Political Pro-Quiz";
 export const eventSlug = "political-pro-quiz-playbook";
 export type CapturePosition = "start" | "end";
 
-export const capturePosition: CapturePosition = "start";
+export const capturePosition: CapturePosition = "end";
 
 export type Question = {
   id: string;
@@ -141,6 +141,7 @@ export const submissionSchema = z.object({
   company: z.string().trim().min(1),
   jobTitle: z.string().trim().min(1),
   enterPrizeDraw: z.boolean(),
+  privacyPolicyAccepted: z.boolean(),
   consentMarketing: z.boolean(),
   answers: z.array(answerSchema).length(5),
 }).superRefine((value, context) => {
@@ -159,6 +160,14 @@ export const submissionSchema = z.object({
       message: "Last name is required to enter the prize draw.",
     });
   }
+
+  if (!value.privacyPolicyAccepted) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["privacyPolicyAccepted"],
+      message: "You must accept the privacy policy before submitting.",
+    });
+  }
 });
 
 export type AnswerInput = z.infer<typeof answerSchema>;
@@ -171,6 +180,7 @@ export type DemographicFields = Pick<
   | "company"
   | "jobTitle"
   | "enterPrizeDraw"
+  | "privacyPolicyAccepted"
   | "consentMarketing"
 >;
 
