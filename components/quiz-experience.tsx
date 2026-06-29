@@ -199,30 +199,30 @@ export function QuizExperience({
           <form
             key="prize"
             onSubmit={submitQuiz}
-            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-5"
+            className="space-y-3 [animation:fade-in-up_0.35s_ease-out] sm:space-y-4"
           >
-            <div className="space-y-2">
-              <h2 className="text-2xl font-semibold sm:text-3xl">
+            <div className="space-y-1.5">
+              <h2 className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
                 Get your score by email and enter the prize draw.
               </h2>
-              <p className="text-sm leading-6 text-white/68 sm:leading-7">
+              <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
                 Add your work details so we can send your result. If you want to be entered into the draw, add your first and last name too.
               </p>
             </div>
 
             {score !== null ? (
-              <div className="rounded-2xl border border-white/10 bg-white/6 p-4 sm:rounded-3xl sm:p-5">
-                <p className="text-sm uppercase tracking-[0.25em] text-white/50">
+              <div className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4">
+                <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
                   Your score
                 </p>
-                <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
-                <p className="mt-3 text-sm leading-6 text-white/66">
+                <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">{score}/15</p>
+                <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
                   {result?.title}. {result?.description}
                 </p>
               </div>
             ) : null}
 
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
               <Field
                 label="Email"
                 inputType="email"
@@ -244,7 +244,7 @@ export function QuizExperience({
               />
             </div>
 
-            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
+            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -258,7 +258,7 @@ export function QuizExperience({
               </span>
             </label>
 
-            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
+            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -281,7 +281,7 @@ export function QuizExperience({
               </span>
             </label>
 
-            <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/6 p-3 text-sm text-white/74 sm:rounded-3xl sm:p-4">
+            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
               <input
                 type="checkbox"
                 className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
@@ -293,7 +293,7 @@ export function QuizExperience({
               <span>Yes, enter me into the prize draw.</span>
             </label>
 
-            <div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
+            <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
               <Field
                 label="First name"
                 value={demographics.firstName}
@@ -314,18 +314,18 @@ export function QuizExperience({
               </p>
             ) : null}
 
-            <div className="flex flex-wrap justify-between gap-3 pt-1">
+            <div className="flex flex-wrap justify-between gap-2.5 pt-1">
               <button
                 type="button"
                 onClick={previousStep}
-                className="rounded-full border border-white/14 px-5 py-3 text-sm font-medium text-white/74 transition hover:bg-white/7"
+                className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 sm:px-5 sm:py-3"
               >
                 Back
               </button>
               <button
                 type="submit"
                 disabled={submissionState === "submitting" || !canSubmit}
-                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
               >
                 {submissionState === "submitting" ? "Submitting..." : "Email my score"}
               </button>
@@ -421,14 +421,16 @@ function Field({
   inputType = "text",
 }: FieldProps) {
   return (
-    <label className="space-y-2">
-      <span className="text-xs uppercase tracking-[0.25em] text-white/55">{label}</span>
+    <label className="space-y-1.5">
+      <span className="text-[0.65rem] uppercase tracking-[0.22em] text-white/55 sm:text-xs">
+        {label}
+      </span>
       <input
         type={inputType}
         value={value}
         required={required}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-2xl border border-white/10 bg-white/7 px-4 py-3 text-white outline-none transition placeholder:text-white/28 focus:border-[var(--accent)]"
+        className="w-full rounded-xl border border-white/10 bg-white/7 px-3 py-2.5 text-sm text-white outline-none transition placeholder:text-white/28 focus:border-[var(--accent)] sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
       />
     </label>
   );

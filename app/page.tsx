@@ -5,18 +5,18 @@ import { eventName, questions } from "@/lib/quiz";
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen overflow-hidden bg-[var(--bg)] text-white">
+    <main className="relative min-h-[100dvh] bg-[var(--bg)] text-white">
       <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="fixed inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
             "url('https://www.politico.eu/wp-content/uploads/2026/05/20/1920x1080-9-1-2-scaled.png')",
         }}
       />
-      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(135deg,rgba(8,10,16,0.84),rgba(16,19,26,0.72),rgba(24,29,40,0.82))]" />
-      <section className="relative mx-auto flex min-h-screen w-full max-w-7xl flex-col justify-center px-4 py-4 sm:px-5 sm:py-6 lg:px-10 lg:py-8">
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(135deg,rgba(8,10,16,0.84),rgba(16,19,26,0.72),rgba(24,29,40,0.82))]" />
+      <section className="relative mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-start px-4 py-4 sm:px-5 sm:py-5 lg:justify-center lg:px-10 lg:py-8">
         <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-8">
-          <div className="order-2 space-y-3 lg:order-1 lg:space-y-4">
+          <div className="order-1 space-y-2 lg:order-1 lg:space-y-4">
             <div className="space-y-3">
               <Image
                 src="/pro-logo-white.svg"
@@ -38,7 +38,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="order-1 lg:order-2">
+          <div className="order-2 lg:order-2">
             <QuizExperience questions={questions} capturePosition="end" />
           </div>
         </div>
