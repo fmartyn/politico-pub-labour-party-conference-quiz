@@ -1,15 +1,15 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #09111f;
-  --panel: rgba(9, 17, 31, 0.72);
+  --bg: #12161f;
+  --panel: rgba(18, 22, 31, 0.78);
   --text: #f5f7fb;
   --muted: rgba(245, 247, 251, 0.7);
-  --accent: #ffd166;
-  --accent-2: #77d1c5;
-  --accent-3: #ff6b6b;
+  --accent: #f4b040;
+  --accent-2: #e1302d;
+  --accent-3: #f8e7c7;
   --shadow: 0 24px 80px rgba(0, 0, 0, 0.35);
-  --font-sans: "Sora", "Avenir Next", "Segoe UI", sans-serif;
+  --font-sans: "Sora", "Avenir Next", "Helvetica Neue", sans-serif;
 }
 
 * {
@@ -24,7 +24,7 @@ body {
   margin: 0;
   min-height: 100vh;
   background:
-    linear-gradient(135deg, #08111e 0%, #0e1f37 42%, #122843 100%);
+    linear-gradient(135deg, #12161f 0%, #1a202d 45%, #262d3d 100%);
   color: var(--text);
   font-family: var(--font-sans);
 }

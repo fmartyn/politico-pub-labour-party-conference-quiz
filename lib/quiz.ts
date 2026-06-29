@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-export const eventName = "London Playbook Summit";
-export const eventSlug = "london-playbook-summit";
+export const eventName = "Are You a POLITICO Pro?";
+export const eventSlug = "politico-pro-content-survey";
 export type CapturePosition = "start" | "end";
 
-export const capturePosition: CapturePosition = "start";
+export const capturePosition: CapturePosition = "end";
 
 export type Question = {
   id: string;
@@ -18,106 +18,106 @@ export type Question = {
 
 export const questions: Question[] = [
   {
-    id: "growth_priority",
-    prompt: "What is the commercial outcome you most want from your playbook this quarter?",
+    id: "news_start",
+    prompt: "When you open your inbox in the morning, what kind of coverage are you most likely to click first?",
     options: [
       {
-        label: "Faster pipeline creation",
-        description: "You need more qualified opportunities at the top of the funnel.",
+        label: "A sharp policy briefing",
+        description: "You want the core developments fast, with enough context to act on them.",
         weight: 3,
       },
       {
-        label: "Higher conversion rates",
-        description: "You have demand, but sales execution is leaking value.",
+        label: "A smartly curated newsletter",
+        description: "You like a strong point of view and a quick read on what matters.",
         weight: 2,
       },
       {
-        label: "Sharper account expansion",
-        description: "You are focused on deeper penetration inside existing customers.",
+        label: "A headline scan",
+        description: "You want the broad picture before deciding what deserves deeper attention.",
         weight: 1,
       },
     ],
   },
   {
-    id: "team_maturity",
-    prompt: "How mature is your current go-to-market operating model?",
+    id: "policy_depth",
+    prompt: "How deep do you usually want a story to go once a policy issue catches your attention?",
     options: [
       {
-        label: "Highly structured and measured",
-        description: "Roles, rituals, and dashboards are already consistent.",
+        label: "Show me the implications, stakeholders, and next moves",
+        description: "You care about what changes, who matters, and what happens next.",
         weight: 3,
       },
       {
-        label: "Partially defined",
-        description: "Good instincts are present, but the process still varies by person.",
+        label: "Give me the essential context and the big takeaway",
+        description: "You want enough depth to stay informed without reading a full dossier.",
         weight: 2,
       },
       {
-        label: "Mostly ad hoc",
-        description: "Execution depends on heroic effort instead of repeatable systems.",
+        label: "Keep it light unless it becomes a major story",
+        description: "You follow policy, but only a few developments merit serious time.",
         weight: 1,
       },
     ],
   },
   {
-    id: "data_confidence",
-    prompt: "How much confidence do you have in the data behind your current decisions?",
+    id: "topic_interest",
+    prompt: "Which area would you most want more premium reporting on right now?",
     options: [
       {
-        label: "Very high confidence",
-        description: "The team trusts the numbers and acts on them quickly.",
+        label: "Tech, AI, and digital policy",
+        description: "You are tracking regulation, competition, and where policy meets innovation.",
         weight: 3,
       },
       {
-        label: "Mixed confidence",
-        description: "The data is useful, but definitions or freshness are inconsistent.",
+        label: "Energy, climate, and infrastructure",
+        description: "You want sharper reporting on the forces shaping the transition.",
         weight: 2,
       },
       {
-        label: "Low confidence",
-        description: "Too many decisions are made on partial visibility.",
+        label: "Congress, campaigns, and political power",
+        description: "You follow the political machinery behind the public headlines.",
         weight: 1,
       },
     ],
   },
   {
-    id: "ai_readiness",
-    prompt: "Where does AI have the clearest role in your revenue motion today?",
+    id: "reading_style",
+    prompt: "What makes a piece of coverage feel especially valuable to you?",
     options: [
       {
-        label: "Personalized outreach at scale",
-        description: "You want sharper messaging without increasing headcount linearly.",
+        label: "Exclusive reporting I cannot get elsewhere",
+        description: "Originality matters most. You want insight with a reason to pay attention.",
         weight: 3,
       },
       {
-        label: "Insight generation for teams",
-        description: "You need better visibility into what is working and why.",
+        label: "Analysis that connects the dots clearly",
+        description: "You value synthesis and explanation more than volume.",
         weight: 2,
       },
       {
-        label: "Still exploring the practical use cases",
-        description: "You are evaluating where AI can create real commercial leverage.",
+        label: "Speed and convenience",
+        description: "If it gets you the key takeaway quickly, it has done its job.",
         weight: 1,
       },
     ],
   },
   {
-    id: "summit_follow_up",
-    prompt: "What kind of follow-up would be most useful after the summit?",
+    id: "trial_interest",
+    prompt: "If you were offered a chance to explore POLITICO Pro further, what would be most appealing?",
     options: [
       {
-        label: "A tailored strategy session",
-        description: "Best for teams wanting a practical next-step roadmap.",
+        label: "A free trial to explore the reporting firsthand",
+        description: "You want to see how the full experience fits into your regular reading habits.",
         weight: 3,
       },
       {
-        label: "A benchmark and diagnostics pack",
-        description: "Best for comparing current performance against best practice.",
+        label: "A curated sample built around my interests",
+        description: "You would rather start with a tailored taste than a blank slate.",
         weight: 2,
       },
       {
-        label: "Curated resources and examples",
-        description: "Best for early-stage exploration after the event.",
+        label: "Just keep me posted on standout coverage",
+        description: "You are interested, but prefer a lighter-touch relationship for now.",
         weight: 1,
       },
     ],

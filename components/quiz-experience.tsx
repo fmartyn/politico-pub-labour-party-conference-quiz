@@ -128,11 +128,11 @@ export function QuizExperience({
         <div className="mb-6 flex items-center justify-between gap-4">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-              Quiz flow
+              Survey flow
             </p>
             <p className="mt-2 text-lg font-medium text-white">
               {submissionState === "success"
-                ? "Submission saved"
+                ? "Survey complete"
                 : `Step ${Math.min(displayStep, totalSteps)} of ${totalSteps}`}
             </p>
           </div>
@@ -151,17 +151,17 @@ export function QuizExperience({
             key="success"
             className="space-y-5 [animation:fade-in-up_0.35s_ease-out]"
           >
-              <div className="inline-flex rounded-full border border-emerald-300/20 bg-emerald-300/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-emerald-100">
-                Ready for follow-up
+              <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
+                Thanks for taking part
               </div>
-              <h2 className="text-3xl font-semibold">Thank you. Your quiz response is in.</h2>
+              <h2 className="text-3xl font-semibold">You are in.</h2>
               <p className="text-base leading-7 text-white/72">
-                The submission has been written to Neon. You can now tailor the result screen, follow-up email, or on-site sales handoff around this captured profile.
+                Thanks for sharing your reading preferences. We will use responses to shape future experiences, and selected participants may hear more about a POLITICO Pro trial or related offers.
               </p>
               {score !== null ? (
                 <div className="rounded-3xl border border-white/10 bg-white/6 p-5">
                   <p className="text-sm uppercase tracking-[0.25em] text-white/50">
-                    Readiness score
+                    Interest score
                   </p>
                   <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
                 </div>
@@ -175,13 +175,13 @@ export function QuizExperience({
           >
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-[0.3em] text-white/55">
-                  Demographic capture
+                  Stay connected
                 </p>
                 <h2 className="text-3xl font-semibold">
-                  Capture the contact before the energy drops.
+                  Add your details for a chance to hear more.
                 </h2>
                 <p className="text-sm leading-7 text-white/68">
-                  The current configuration places capture at the {capturePosition}. You can switch that in one constant later if needed.
+                  Complete the survey with a few details so we can contact you if you are selected for a trial, sample, or future POLITICO Pro update.
                 </p>
               </div>
 
@@ -206,13 +206,13 @@ export function QuizExperience({
                   required
                 />
                 <Field
-                  label="Company"
+                  label="Organization"
                   value={demographics.company}
                   onChange={(value) => updateDemographicField("company", value)}
                   required
                 />
                 <Field
-                  label="Job title"
+                  label="Role"
                   value={demographics.jobTitle}
                   onChange={(value) => updateDemographicField("jobTitle", value)}
                 />
@@ -228,7 +228,7 @@ export function QuizExperience({
                   }
                 />
                 <span>
-                  I am happy to receive follow-up communication related to the summit, next steps, and relevant offers.
+                  I am happy to receive follow-up messages about POLITICO Pro content, trials, and related updates.
                 </span>
               </label>
 
@@ -254,7 +254,7 @@ export function QuizExperience({
                     disabled={submissionState === "submitting"}
                     className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffb703)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {submissionState === "submitting" ? "Saving..." : "Submit response"}
+                    {submissionState === "submitting" ? "Submitting..." : "Complete survey"}
                   </button>
                 )}
               </div>
@@ -320,14 +320,14 @@ export function QuizExperience({
                     disabled={!canAdvance || submissionState === "submitting"}
                     className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),#b8f2e6)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                   >
-                    {submissionState === "submitting" ? "Saving..." : "Finish and save"}
+                    {submissionState === "submitting" ? "Submitting..." : "Continue"}
                   </button>
                 ) : (
                   <button
                     type="button"
                     onClick={nextStep}
                     disabled={!canAdvance}
-                    className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),#b8f2e6)] px-6 py-3 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),#ff867f)] px-6 py-3 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {step === questions.length - 1 ? "Continue" : "Next question"}
                   </button>
