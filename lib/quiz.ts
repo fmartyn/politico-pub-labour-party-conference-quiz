@@ -60,23 +60,23 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: "green_paper",
-    prompt: "In UK policymaking, what is a green paper usually meant to do?",
+    id: "ai_copyright",
+    prompt: "Which British director has been raking the government over the coals on AI and copyright?",
     options: [
       {
-        label: "Launch a consultation and float options",
-        description: "A green paper generally tests ideas before firmer legislative moves.",
+        label: "Ken Loach",
+        description: "A heavyweight director, but not the one leading this particular fight.",
+        weight: 0,
+      },
+      {
+        label: "Danny Boyle",
+        description: "A recognisable name, but not the director at the centre of this copyright debate.",
+        weight: 0,
+      },
+      {
+        label: "Beeban Kidron",
+        description: "She has been one of the clearest voices challenging the government's approach.",
         weight: 3,
-      },
-      {
-        label: "Announce a final government decision",
-        description: "That is closer to where a white paper or bill lands.",
-        weight: 0,
-      },
-      {
-        label: "Trigger an immediate vote in both Houses",
-        description: "Not at this stage. It is more about consultation than conclusion.",
-        weight: 0,
       },
     ],
   },
