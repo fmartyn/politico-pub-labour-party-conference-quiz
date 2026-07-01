@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-import { QuizExperience } from "@/components/quiz-experience";
-import { eventName, questions } from "@/lib/quiz";
+import { QuizShell } from "@/components/quiz-shell";
+import { capturePosition, eventName, questions } from "@/lib/quiz";
 
 export default function HomePage() {
   return (
@@ -14,9 +14,9 @@ export default function HomePage() {
         }}
       />
       <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(135deg,rgba(8,10,16,0.84),rgba(16,19,26,0.72),rgba(24,29,40,0.82))]" />
-      <section className="relative mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-start px-4 py-4 sm:px-5 sm:py-5 lg:justify-center lg:px-10 lg:py-8">
-        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:gap-8">
-          <div className="order-1 space-y-2 lg:order-1 lg:space-y-4">
+      <section className="relative mx-auto flex min-h-[100dvh] w-full max-w-7xl flex-col justify-start px-4 py-4 sm:px-5 sm:py-5 lg:px-10 lg:py-8">
+        <div className="space-y-4 lg:space-y-6">
+          <div className="space-y-2">
             <div className="space-y-3">
               <Image
                 src="/pro-logo-white.svg"
@@ -37,10 +37,7 @@ export default function HomePage() {
               </p>
             </div>
           </div>
-
-          <div className="order-2 lg:order-2">
-            <QuizExperience questions={questions} capturePosition="end" />
-          </div>
+          <QuizShell questions={questions} capturePosition={capturePosition} />
         </div>
       </section>
     </main>

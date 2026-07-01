@@ -14,11 +14,18 @@ create table if not exists quiz_submissions (
   answers jsonb not null,
   quiz_version text not null,
   score integer not null,
+  duration_ms integer not null default 0,
   raw_payload jsonb not null
 );
+
+alter table quiz_submissions
+  add column if not exists duration_ms integer not null default 0;
 
 create index if not exists quiz_submissions_event_slug_idx
   on quiz_submissions (event_slug);
 
 create index if not exists quiz_submissions_email_idx
   on quiz_submissions (email);
+
+create index if not exists quiz_submissions_ranking_idx
+  on quiz_submissions (event_slug, score desc, duration_ms asc, created_at asc);

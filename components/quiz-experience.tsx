@@ -1,13 +1,14 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
-import { eventName, eventSlug, getResultMeta } from "@/lib/quiz";
+import { eventName, eventSlug, formatDuration, getResultMeta } from "@/lib/quiz";
 
 type QuizExperienceProps = {
   questions: Question[];
   capturePosition: CapturePosition;
+  onSubmissionSaved?: () => void;
 };
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
@@ -26,6 +27,7 @@ const initialDemographics: DemographicFields = {
 export function QuizExperience({
   questions,
   capturePosition,
+  onSubmissionSaved,
 }: QuizExperienceProps) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -34,6 +36,12 @@ export function QuizExperience({
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [score, setScore] = useState<number | null>(null);
+  const [durationMs, setDurationMs] = useState(0);
+  const startedAtRef = useRef<number>(0);
+
+  useEffect(() => {
+    startedAtRef.current = performance.now();
+  }, []);
 
   const totalSteps = questions.length + 1;
   const displayStep = step + 1;
@@ -79,7 +87,7 @@ export function QuizExperience({
     setStep((current) => current - 1);
   }
 
-  async function persistSubmission() {
+  async function persistSubmission(finalDurationMs: number) {
     setSubmissionState("submitting");
     setErrorMessage("");
 
@@ -100,6 +108,7 @@ export function QuizExperience({
         ...demographics,
         answers: answerPayload,
         capturePosition,
+        durationMs: finalDurationMs,
         eventSlug,
         quizVersion: "v1",
       }),
@@ -109,6 +118,7 @@ export function QuizExperience({
       ok: boolean;
       message?: string;
       score?: number;
+      durationMs?: number;
     };
 
     if (!response.ok || !result.ok) {
@@ -118,7 +128,9 @@ export function QuizExperience({
     }
 
     setScore(result.score ?? null);
+    setDurationMs(result.durationMs ?? finalDurationMs);
     setSubmissionState("success");
+    onSubmissionSaved?.();
   }
 
   async function submitQuiz(event?: FormEvent<HTMLFormElement>) {
@@ -142,7 +154,9 @@ export function QuizExperience({
       return;
     }
 
-    await persistSubmission();
+    const finalDurationMs = Math.round(performance.now() - startedAtRef.current);
+    setDurationMs(finalDurationMs);
+    await persistSubmission(finalDurationMs);
   }
 
   const result = score !== null ? getResultMeta(score) : null;
@@ -187,6 +201,11 @@ export function QuizExperience({
                     Your score
                   </p>
                   <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
+                  {durationMs > 0 ? (
+                    <p className="mt-2 text-sm text-white/66">
+                      Finished in {formatDuration(durationMs)}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
               <p className="text-sm leading-6 text-white/60 sm:leading-7">
@@ -216,6 +235,11 @@ export function QuizExperience({
                   Your score
                 </p>
                 <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">{score}/15</p>
+                {durationMs > 0 ? (
+                  <p className="mt-2 text-xs leading-5 text-white/66 sm:text-sm sm:leading-6">
+                    Time to complete: {formatDuration(durationMs)}
+                  </p>
+                ) : null}
                 <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
                   {result?.title}. {result?.description}
                 </p>

@@ -23,6 +23,7 @@ export async function POST(request: Request) {
         answers,
         quiz_version,
         score,
+        duration_ms,
         raw_payload
       ) VALUES (
         ${parsed.eventSlug},
@@ -36,11 +37,12 @@ export async function POST(request: Request) {
         ${JSON.stringify(parsed.answers)}::jsonb,
         ${parsed.quizVersion},
         ${score},
+        ${parsed.durationMs},
         ${JSON.stringify(parsed)}::jsonb
       )
     `;
 
-    return NextResponse.json({ ok: true, score });
+    return NextResponse.json({ ok: true, score, durationMs: parsed.durationMs });
   } catch (error) {
     console.error("submission_error", error);
 

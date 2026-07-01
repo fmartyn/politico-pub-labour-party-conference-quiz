@@ -135,6 +135,7 @@ export const submissionSchema = z.object({
   eventSlug: z.string().min(1),
   quizVersion: z.string().min(1),
   capturePosition: z.enum(["start", "end"]),
+  durationMs: z.number().int().min(0).max(600000),
   email: z.string().email(),
   firstName: z.string().trim().optional().default(""),
   lastName: z.string().trim().optional().default(""),
@@ -186,6 +187,14 @@ export type DemographicFields = Pick<
 
 export function scoreAnswers(answers: AnswerInput[]) {
   return answers.reduce((total, answer) => total + answer.weight, 0);
+}
+
+export function formatDuration(durationMs: number) {
+  const totalSeconds = Math.max(0, Math.round(durationMs / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+
+  return minutes > 0 ? `${minutes}:${seconds.toString().padStart(2, "0")}` : `${seconds}s`;
 }
 
 export function getResultMeta(score: number) {
