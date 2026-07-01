@@ -12,6 +12,7 @@ export async function GET() {
         select
           first_name,
           last_name,
+          company,
           email,
           score,
           duration_ms,
@@ -28,6 +29,7 @@ export async function GET() {
       select
         first_name,
         last_name,
+        company,
         score,
         duration_ms,
         created_at
@@ -49,6 +51,7 @@ export async function GET() {
       entries: leaderboard.map((entry, index) => ({
         rank: index + 1,
         name: `${entry.first_name} ${entry.last_name}`.trim(),
+        company: entry.company,
         score: entry.score,
         durationMs: entry.duration_ms,
       })),

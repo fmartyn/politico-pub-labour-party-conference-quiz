@@ -7,6 +7,7 @@ import { formatDuration } from "@/lib/quiz";
 type LeaderboardEntry = {
   rank: number;
   name: string;
+  company: string;
   score: number;
   durationMs: number;
 };
@@ -53,46 +54,47 @@ export function LeaderboardPanel({ refreshKey }: LeaderboardPanelProps) {
   }, [refreshKey]);
 
   return (
-    <aside className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6">
-      <div className="space-y-2">
+    <aside className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-5">
+      <div className="space-y-1.5">
         <p className="text-xs uppercase tracking-[0.28em] text-white/50">
           Leaderboard
         </p>
-        <h2 className="text-2xl font-semibold text-white">Fastest and most correct</h2>
-        <p className="text-sm leading-6 text-white/68">
+        <h2 className="text-xl font-semibold text-white sm:text-2xl">Fastest and most correct</h2>
+        <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
           Ranked by score first, then completion time.
         </p>
       </div>
 
-      <div className="mt-4 rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-white/74">
+      <div className="mt-3 rounded-2xl border border-white/10 bg-white/6 px-3 py-2.5 text-xs text-white/74 sm:text-sm">
         <span className="font-semibold text-white">{totalCompleted}</span> people have completed the quiz
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-3 space-y-1.5">
         {isLoading ? (
-          <div className="rounded-2xl border border-white/10 bg-white/6 px-4 py-5 text-sm text-white/68">
+          <div className="rounded-2xl border border-white/10 bg-white/6 px-3 py-4 text-sm text-white/68">
             Loading leaderboard...
           </div>
         ) : entries.length > 0 ? (
           entries.map((entry) => (
             <div
-              key={`${entry.rank}-${entry.name}-${entry.durationMs}`}
-              className="grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border border-white/10 bg-white/6 px-4 py-3"
+              key={`${entry.rank}-${entry.name}-${entry.company}-${entry.durationMs}`}
+              className="grid grid-cols-[auto_1fr_auto] items-center gap-2 rounded-2xl border border-white/10 bg-white/6 px-3 py-2.5"
             >
-              <div className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/12 bg-white/8 text-sm font-semibold text-white">
+              <div className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-white/12 bg-white/8 text-xs font-semibold text-white">
                 {entry.rank}
               </div>
               <div className="min-w-0">
                 <p className="truncate text-sm font-medium text-white">{entry.name}</p>
-                <p className="text-xs text-white/55">{formatDuration(entry.durationMs)}</p>
+                <p className="truncate text-[11px] text-white/58">{entry.company}</p>
               </div>
               <div className="text-right">
                 <p className="text-sm font-semibold text-white">{entry.score}/15</p>
+                <p className="text-[11px] text-white/55">{formatDuration(entry.durationMs)}</p>
               </div>
             </div>
           ))
         ) : (
-          <div className="rounded-2xl border border-white/10 bg-white/6 px-4 py-5 text-sm text-white/68">
+          <div className="rounded-2xl border border-white/10 bg-white/6 px-3 py-4 text-sm text-white/68">
             No names on the board yet. Complete the quiz and submit your details to take a spot.
           </div>
         )}
