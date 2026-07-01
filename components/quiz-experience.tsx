@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
 import { eventName, eventSlug, formatDuration, getResultMeta } from "@/lib/quiz";
@@ -21,7 +21,7 @@ const initialDemographics: DemographicFields = {
   jobTitle: "",
   enterPrizeDraw: false,
   privacyPolicyAccepted: false,
-  consentMarketing: true,
+  consentMarketing: false,
 };
 
 export function QuizExperience({
@@ -37,26 +37,21 @@ export function QuizExperience({
   const [errorMessage, setErrorMessage] = useState("");
   const [score, setScore] = useState<number | null>(null);
   const [durationMs, setDurationMs] = useState(0);
-  const startedAtRef = useRef<number>(0);
-
-  useEffect(() => {
-    startedAtRef.current = performance.now();
-  }, []);
+  const startedAtRef = useRef<number | null>(null);
 
   const totalSteps = questions.length + 1;
   const displayStep = step + 1;
   const isPrizeStep = step === questions.length;
   const activeQuestion = step >= 0 && step < questions.length ? questions[step] : null;
   const canAdvance = activeQuestion ? Boolean(answers[activeQuestion.id]) : true;
-  const canSubmitDetails =
-    demographics.email.trim() &&
-    demographics.company.trim() &&
-    demographics.jobTitle.trim();
   const canSubmit =
-    canSubmitDetails &&
-    demographics.privacyPolicyAccepted &&
-    (!demographics.enterPrizeDraw ||
-      (demographics.firstName.trim() && demographics.lastName.trim()));
+    !demographics.enterPrizeDraw ||
+    (Boolean(demographics.firstName.trim()) &&
+      Boolean(demographics.lastName.trim()) &&
+      Boolean(demographics.email.trim()) &&
+      Boolean(demographics.company.trim()) &&
+      Boolean(demographics.jobTitle.trim()) &&
+      demographics.privacyPolicyAccepted);
 
   function updateDemographicField<K extends keyof DemographicFields>(
     field: K,
@@ -68,7 +63,11 @@ export function QuizExperience({
     }));
   }
 
-  function handleAnswer(questionId: string, option: string) {
+  function handleAnswer(questionId: string, option: string, startedAtMs: number) {
+    if (startedAtRef.current === null) {
+      startedAtRef.current = startedAtMs;
+    }
+
     setAnswers((current) => ({
       ...current,
       [questionId]: option,
@@ -136,25 +135,20 @@ export function QuizExperience({
   async function submitQuiz(event?: FormEvent<HTMLFormElement>) {
     event?.preventDefault();
 
-    if (!canSubmitDetails) {
-      setSubmissionState("error");
-      setErrorMessage("Add your email, organization, and role to get your score by email.");
-      return;
-    }
-
     if (!canSubmit) {
-      if (!demographics.privacyPolicyAccepted) {
+      if (demographics.enterPrizeDraw && !demographics.privacyPolicyAccepted) {
         setSubmissionState("error");
         setErrorMessage("Accept the privacy policy before submitting.");
         return;
       }
 
       setSubmissionState("error");
-      setErrorMessage("Add your first and last name to enter the prize draw.");
+      setErrorMessage("Add your details to enter the prize draw.");
       return;
     }
 
-    const finalDurationMs = Math.round(performance.now() - startedAtRef.current);
+    const startedAt = startedAtRef.current ?? performance.now();
+    const finalDurationMs = Math.round(performance.now() - startedAt);
     setDurationMs(finalDurationMs);
     await persistSubmission(finalDurationMs);
   }
@@ -222,10 +216,10 @@ export function QuizExperience({
           >
             <div className="space-y-1.5">
               <h2 className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
-                Get your score by email and enter the prize draw.
+                Want to enter the prize draw?
               </h2>
               <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
-                Add your work details so we can send your result. If you want to be entered into the draw, add your first and last name too.
+                Your score is ready. If you want to be entered into the draw and hear more from POLITICO Pro, add your details below.
               </p>
             </div>
 
@@ -246,41 +240,57 @@ export function QuizExperience({
               </div>
             ) : null}
 
+            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
+                checked={demographics.enterPrizeDraw}
+                onChange={(event) =>
+                  setDemographics((current) => ({
+                    ...current,
+                    enterPrizeDraw: event.target.checked,
+                    consentMarketing: event.target.checked,
+                  }))
+                }
+              />
+              <span>
+                Yes, enter me into the prize draw and keep me posted on POLITICO Pro updates and related offers.
+              </span>
+            </label>
+
             <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
+              <Field
+                label="First name"
+                value={demographics.firstName}
+                onChange={(value) => updateDemographicField("firstName", value)}
+                required={demographics.enterPrizeDraw}
+              />
+              <Field
+                label="Last name"
+                value={demographics.lastName}
+                onChange={(value) => updateDemographicField("lastName", value)}
+                required={demographics.enterPrizeDraw}
+              />
               <Field
                 label="Email"
                 inputType="email"
                 value={demographics.email}
                 onChange={(value) => updateDemographicField("email", value)}
-                required
+                required={demographics.enterPrizeDraw}
               />
               <Field
                 label="Organization"
                 value={demographics.company}
                 onChange={(value) => updateDemographicField("company", value)}
-                required
+                required={demographics.enterPrizeDraw}
               />
               <Field
                 label="Role"
                 value={demographics.jobTitle}
                 onChange={(value) => updateDemographicField("jobTitle", value)}
-                required
+                required={demographics.enterPrizeDraw}
               />
             </div>
-
-            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
-              <input
-                type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
-                checked={demographics.consentMarketing}
-                onChange={(event) =>
-                  updateDemographicField("consentMarketing", event.target.checked)
-                }
-              />
-              <span>
-                Keep me posted on POLITICO Pro updates and related offers.
-              </span>
-            </label>
 
             <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
               <input
@@ -297,40 +307,13 @@ export function QuizExperience({
                   href="https://www.politico.eu/privacy-policy/"
                   target="_blank"
                   rel="noreferrer"
-                  className="text-[var(--accent)] underline underline-offset-4"
+                  className="font-semibold text-[#ffd56a] underline decoration-2 underline-offset-4"
                 >
                   privacy policy
                 </a>
                 .
               </span>
             </label>
-
-            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
-              <input
-                type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
-                checked={demographics.enterPrizeDraw}
-                onChange={(event) =>
-                  updateDemographicField("enterPrizeDraw", event.target.checked)
-                }
-              />
-              <span>Yes, enter me into the prize draw.</span>
-            </label>
-
-            <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
-              <Field
-                label="First name"
-                value={demographics.firstName}
-                onChange={(value) => updateDemographicField("firstName", value)}
-                required={demographics.enterPrizeDraw}
-              />
-              <Field
-                label="Last name"
-                value={demographics.lastName}
-                onChange={(value) => updateDemographicField("lastName", value)}
-                required={demographics.enterPrizeDraw}
-              />
-            </div>
 
             {errorMessage ? (
               <p className="rounded-2xl border border-red-300/20 bg-red-400/10 px-4 py-3 text-sm text-red-100">
@@ -348,10 +331,14 @@ export function QuizExperience({
               </button>
               <button
                 type="submit"
-                disabled={submissionState === "submitting" || !canSubmit}
+                disabled={submissionState === "submitting"}
                 className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
               >
-                {submissionState === "submitting" ? "Submitting..." : "Email my score"}
+                {submissionState === "submitting"
+                  ? "Submitting..."
+                  : demographics.enterPrizeDraw
+                    ? "Save my entry"
+                    : "Finish"}
               </button>
             </div>
           </form>
@@ -372,7 +359,9 @@ export function QuizExperience({
                     <button
                       key={option.label}
                       type="button"
-                      onClick={() => handleAnswer(activeQuestion.id, option.label)}
+                      onClick={(event) =>
+                        handleAnswer(activeQuestion.id, option.label, event.timeStamp)
+                      }
                       className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 ${
                         selected
                           ? "border-[var(--accent)] bg-white/12"

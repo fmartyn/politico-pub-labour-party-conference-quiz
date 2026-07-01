@@ -136,16 +136,24 @@ export const submissionSchema = z.object({
   quizVersion: z.string().min(1),
   capturePosition: z.enum(["start", "end"]),
   durationMs: z.number().int().min(0).max(600000),
-  email: z.string().email(),
+  email: z.string().trim().optional().default(""),
   firstName: z.string().trim().optional().default(""),
   lastName: z.string().trim().optional().default(""),
-  company: z.string().trim().min(1),
-  jobTitle: z.string().trim().min(1),
+  company: z.string().trim().optional().default(""),
+  jobTitle: z.string().trim().optional().default(""),
   enterPrizeDraw: z.boolean(),
   privacyPolicyAccepted: z.boolean(),
   consentMarketing: z.boolean(),
   answers: z.array(answerSchema).length(5),
 }).superRefine((value, context) => {
+  if (value.enterPrizeDraw && !z.email().safeParse(value.email).success) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["email"],
+      message: "Email is required to enter the prize draw.",
+    });
+  }
+
   if (value.enterPrizeDraw && !value.firstName.trim()) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
@@ -162,7 +170,23 @@ export const submissionSchema = z.object({
     });
   }
 
-  if (!value.privacyPolicyAccepted) {
+  if (value.enterPrizeDraw && !value.company.trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["company"],
+      message: "Organization is required to enter the prize draw.",
+    });
+  }
+
+  if (value.enterPrizeDraw && !value.jobTitle.trim()) {
+    context.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["jobTitle"],
+      message: "Role is required to enter the prize draw.",
+    });
+  }
+
+  if (value.enterPrizeDraw && !value.privacyPolicyAccepted) {
     context.addIssue({
       code: z.ZodIssueCode.custom,
       path: ["privacyPolicyAccepted"],
