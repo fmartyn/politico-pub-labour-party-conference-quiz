@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { FormEvent, useRef, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
@@ -29,7 +30,7 @@ export function QuizExperience({
   capturePosition,
   onSubmissionSaved,
 }: QuizExperienceProps) {
-  const [step, setStep] = useState(0);
+  const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [demographics, setDemographics] =
     useState<DemographicFields>(initialDemographics);
@@ -40,7 +41,8 @@ export function QuizExperience({
   const startedAtRef = useRef<number | null>(null);
 
   const totalSteps = questions.length + 1;
-  const displayStep = step + 1;
+  const displayStep = step < 0 ? 0 : step + 1;
+  const isIntroStep = step === -1;
   const isPrizeStep = step === questions.length;
   const activeQuestion = step >= 0 && step < questions.length ? questions[step] : null;
   const canAdvance = activeQuestion ? Boolean(answers[activeQuestion.id]) : true;
@@ -154,11 +156,20 @@ export function QuizExperience({
   }
 
   const result = score !== null ? getResultMeta(score) : null;
-  const statusLabel = submissionState === "success"
-    ? "Complete"
-    : isPrizeStep
-      ? "Tell us about you"
-      : `Question ${step + 1} of ${questions.length}`;
+  const statusLabel =
+    submissionState === "success"
+      ? "Complete"
+      : isIntroStep
+        ? "Start"
+        : isPrizeStep
+          ? "Tell us about you"
+          : `Question ${step + 1} of ${questions.length}`;
+  const progressPercent =
+    submissionState === "success"
+      ? 100
+      : isIntroStep
+        ? 0
+        : (Math.min(displayStep, totalSteps) / totalSteps) * 100;
 
   return (
     <div className="relative">
@@ -169,7 +180,7 @@ export function QuizExperience({
           <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10 sm:h-2 sm:w-28">
             <div
               style={{
-                width: `${submissionState === "success" ? 100 : (Math.min(displayStep, totalSteps) / totalSteps) * 100}%`,
+                width: `${progressPercent}%`,
               }}
               className="h-full rounded-full bg-[linear-gradient(90deg,var(--accent),var(--accent-2))]"
             />
@@ -207,6 +218,40 @@ export function QuizExperience({
                   ? "Your prize draw entry has been saved."
                   : "You skipped the prize draw, but your quiz score is safely recorded."}
               </p>
+          </div>
+        ) : isIntroStep ? (
+          <div
+            key="intro"
+            className="grid gap-4 [animation:fade-in-up_0.35s_ease-out] lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
+          >
+            <div className="space-y-3">
+              <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
+                London Playbook challenge
+              </div>
+              <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">
+                Forget the Golden Boot. Win a shoutout in London Playbook and secure Westminster bragging rights.
+              </h2>
+              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7">
+                Scan the QR code to share the quiz, then hit start and see where you land on the board.
+              </p>
+              <button
+                type="button"
+                onClick={nextStep}
+                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] sm:px-6 sm:py-3"
+              >
+                Start the quiz
+              </button>
+            </div>
+            <div className="mx-auto w-full max-w-[220px] rounded-[1.5rem] border border-white/12 bg-white p-4 shadow-[var(--shadow)]">
+              <Image
+                src="/playbook-live-quiz-qr.jpeg"
+                alt="QR code for the Political Pro-Quiz"
+                width={420}
+                height={420}
+                className="h-auto w-full rounded-xl"
+                priority
+              />
+            </div>
           </div>
         ) : isPrizeStep ? (
           <form

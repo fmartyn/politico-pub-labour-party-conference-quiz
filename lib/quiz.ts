@@ -18,49 +18,7 @@ export type Question = {
 
 export const questions: Question[] = [
   {
-    id: "prime_ministers",
-    prompt: "How many UK prime ministers have there been since January 2020?",
-    options: [
-      {
-        label: "Three",
-        description: "Close, but one key name is missing from the recent carousel.",
-        weight: 1,
-      },
-      {
-        label: "Four",
-        description: "Johnson, Truss, Sunak, and Starmer have all held No. 10 in that span.",
-        weight: 3,
-      },
-      {
-        label: "Five",
-        description: "A fair guess, but Westminster has not moved quite that fast.",
-        weight: 0,
-      },
-    ],
-  },
-  {
-    id: "pmqs",
-    prompt: "What does PMQs stand for?",
-    options: [
-      {
-        label: "Prime Minister's Questions",
-        description: "The weekly Commons set-piece remains one of Westminster's best-known rituals.",
-        weight: 3,
-      },
-      {
-        label: "Parliamentary Media Queries",
-        description: "Good acronym energy, but not a real Commons fixture.",
-        weight: 0,
-      },
-      {
-        label: "Public Mandate Quotient",
-        description: "That sounds like a think-tank slide, not a House proceeding.",
-        weight: 0,
-      },
-    ],
-  },
-  {
-    id: "ai_copyright",
+    id: "tech_ai_copyright",
     prompt: "Which British director has been raking the government over the coals on AI and copyright?",
     options: [
       {
@@ -81,44 +39,86 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: "statutory_instrument",
-    prompt: "Which answer best describes a statutory instrument?",
+    id: "fs_red_squirrel",
+    prompt: "The Investment Association-led and Rachel Reeves-backed campaign to get Brits investing in the stock market features which furry friend as its mascot?",
     options: [
       {
-        label: "A form of secondary legislation made under powers granted by an Act",
-        description: "This is classic delegated legislation territory.",
-        weight: 3,
-      },
-      {
-        label: "A formal coalition agreement between parties",
-        description: "That might be politically useful, but it is not a statutory instrument.",
+        label: "A tabby cat",
+        description: "A respectable pet, but not the campaign creature in question.",
         weight: 0,
       },
       {
-        label: "A private member's bill that has passed both Houses",
-        description: "This answer confuses an Act with the delegated rules that follow from it.",
+        label: "A red squirrel",
+        description: "That is the campaign mascot backing the push into retail investing.",
+        weight: 3,
+      },
+      {
+        label: "A raccoon",
+        description: "Wrong continent, wrong mascot.",
         weight: 0,
       },
     ],
   },
   {
-    id: "kings_speech",
-    prompt: "Which annual event sets out the UK government's planned legislative agenda?",
+    id: "energy_split_trousers",
+    prompt: "Which top UK energy figure once split his trousers on his way to meet the king, as reported to Morning Energy and Climate UK readers in 2025?",
     options: [
       {
-        label: "The King's Speech",
-        description: "It outlines the government's intended programme for the parliamentary session.",
+        label: "Energy Secretary Ed Miliband",
+        description: "A plausible Westminster mishap, but not the right protagonist.",
+        weight: 0,
+      },
+      {
+        label: "Octopus boss Greg Jackson",
+        description: "He was the figure at the centre of that memorable anecdote.",
         weight: 3,
       },
       {
-        label: "The Autumn Statement",
-        description: "Important, but focused on fiscal policy rather than the whole legislative slate.",
+        label: "Terrapower founder Bill Gates",
+        description: "Memorable enough, but not the answer here.",
+        weight: 0,
+      },
+    ],
+  },
+  {
+    id: "trade_uk_eu_summit",
+    prompt: "When do officials hope to hold the delayed U.K.-EU summit?",
+    options: [
+      {
+        label: "Mid-October",
+        description: "That is the target window officials are aiming for.",
+        weight: 3,
+      },
+      {
+        label: "Mid-2027",
+        description: "That would be a delay of a very different order.",
         weight: 0,
       },
       {
-        label: "The Speaker's Procession",
-        description: "Ceremonial, yes. Agenda-setting, no.",
+        label: "\"In due course\"",
+        description: "That sounds like classic official fog, but it is not the hoped-for timing.",
         weight: 0,
+      },
+    ],
+  },
+  {
+    id: "politics_fourth_of_july",
+    prompt: "Which prominent figure turned down an invitation to the U.S. Embassy's Fourth of July party last week due to a scheduling conflict?",
+    options: [
+      {
+        label: "Prime Minister Keir Starmer",
+        description: "A fair guess, but not the figure in question.",
+        weight: 0,
+      },
+      {
+        label: "Former U.S. Ambassador Peter Mandelson",
+        description: "High profile, but not the one who declined on scheduling grounds.",
+        weight: 0,
+      },
+      {
+        label: "Makerfield MP Andy Burnham",
+        description: "He was the figure who could not make the embassy celebration.",
+        weight: 3,
       },
     ],
   },
