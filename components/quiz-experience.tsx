@@ -174,9 +174,9 @@ export function QuizExperience({
   return (
     <div className="relative">
       <div className="absolute -inset-2 rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.2),rgba(217,54,50,0.16),rgba(255,143,120,0.12))] blur-xl sm:-inset-4 sm:rounded-[2rem] sm:blur-2xl" />
-      <div className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6">
-        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6 sm:gap-4">
-          <p className="text-sm font-medium text-white sm:text-lg">{statusLabel}</p>
+      <div className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6 lg:p-5">
+        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6 sm:gap-4 lg:mb-4">
+          <p className="text-sm font-medium text-white sm:text-lg lg:text-base">{statusLabel}</p>
           <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10 sm:h-2 sm:w-28">
             <div
               style={{
@@ -222,16 +222,16 @@ export function QuizExperience({
         ) : isIntroStep ? (
           <div
             key="intro"
-            className="grid gap-4 [animation:fade-in-up_0.35s_ease-out] lg:grid-cols-[1.15fr_0.85fr] lg:items-center"
+            className="grid gap-4 [animation:fade-in-up_0.35s_ease-out] lg:grid-cols-[1.15fr_0.8fr] lg:items-center"
           >
-            <div className="space-y-3">
+            <div className="space-y-3 lg:space-y-2.5">
               <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
                 London Playbook challenge
               </div>
-              <h2 className="text-2xl font-semibold leading-tight sm:text-3xl">
+              <h2 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-[2rem]">
                 Forget the Golden Boot. Win a shoutout in London Playbook and secure Westminster bragging rights.
               </h2>
-              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7">
+              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7 lg:text-sm lg:leading-6">
                 Scan the QR code to share the quiz, then hit start and see where you land on the board.
               </p>
               <button
@@ -242,7 +242,7 @@ export function QuizExperience({
                 Start the quiz
               </button>
             </div>
-            <div className="mx-auto w-full max-w-[220px] rounded-[1.5rem] border border-white/12 bg-white p-4 shadow-[var(--shadow)]">
+            <div className="mx-auto w-full max-w-[200px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] lg:max-w-[180px]">
               <Image
                 src="/playbook-live-quiz-qr.jpeg"
                 alt="QR code for the Political Pro-Quiz"
@@ -392,7 +392,7 @@ export function QuizExperience({
             key={activeQuestion?.id}
             className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-6"
           >
-              <h2 className="text-[1.35rem] font-semibold leading-[1.15] sm:text-3xl">
+              <h2 className="text-[1.35rem] font-semibold leading-[1.15] sm:text-3xl lg:text-[2.15rem]">
                 {activeQuestion?.prompt}
               </h2>
 
@@ -407,7 +407,7 @@ export function QuizExperience({
                       onClick={(event) =>
                         handleAnswer(activeQuestion.id, option.label, event.timeStamp)
                       }
-                      className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 ${
+                      className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:p-3 ${
                         selected
                           ? "border-[var(--accent)] bg-white/12"
                           : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
@@ -418,10 +418,10 @@ export function QuizExperience({
                           {String.fromCharCode(65 + index)}
                         </span>
                         <div>
-                          <span className="block text-sm font-medium text-white sm:text-base">
+                          <span className="block text-sm font-medium text-white sm:text-base lg:text-[1.05rem]">
                             {option.label}
                           </span>
-                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6">
+                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6 lg:mt-1 lg:leading-5">
                             {option.description}
                           </span>
                         </div>

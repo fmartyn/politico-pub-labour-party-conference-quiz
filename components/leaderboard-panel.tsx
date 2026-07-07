@@ -54,13 +54,13 @@ export function LeaderboardPanel({ refreshKey }: LeaderboardPanelProps) {
   }, [refreshKey]);
 
   return (
-    <aside className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-5">
+    <aside className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-5 lg:p-4">
       <div className="space-y-1.5">
         <p className="text-xs uppercase tracking-[0.28em] text-white/50">
           Leaderboard
         </p>
-        <h2 className="text-xl font-semibold text-white sm:text-2xl">Fastest and most correct</h2>
-        <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
+        <h2 className="text-xl font-semibold text-white sm:text-2xl lg:text-[1.9rem]">Fastest and most correct</h2>
+        <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6 lg:text-xs lg:leading-5">
           Ranked by score first, then completion time.
         </p>
       </div>
