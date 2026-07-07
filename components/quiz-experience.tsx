@@ -280,6 +280,53 @@ export function QuizExperience({
                   ) : null}
                 </div>
               ) : null}
+              <div className="space-y-2">
+                <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
+                  Answer review
+                </p>
+                <div className="space-y-2">
+                  {questions.map((question, index) => {
+                    const selectedLabel = answers[question.id] ?? "No answer";
+                    const correctLabel =
+                      question.options.find((option) => option.weight > 0)?.label ?? "Unknown";
+                    const isCorrect = selectedLabel === correctLabel;
+
+                    return (
+                      <div
+                        key={question.id}
+                        className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4"
+                      >
+                        <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/45 sm:text-xs">
+                          Question {index + 1}
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-white sm:text-base">
+                          {question.prompt}
+                        </p>
+                        <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                          <div
+                            className={`rounded-xl border px-3 py-2 text-xs sm:text-sm ${
+                              isCorrect
+                                ? "border-emerald-400/35 bg-emerald-500/10 text-emerald-100"
+                                : "border-red-400/30 bg-red-500/10 text-red-100"
+                            }`}
+                          >
+                            <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
+                              Your answer
+                            </span>
+                            <span className="mt-1 block font-medium">{selectedLabel}</span>
+                          </div>
+                          <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100 sm:text-sm">
+                            <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
+                              Correct answer
+                            </span>
+                            <span className="mt-1 block font-medium">{correctLabel}</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
               <p className="text-sm leading-6 text-white/60 sm:leading-7">
                 {demographics.enterPrizeDraw
                   ? "Your prize draw entry has been saved."
@@ -382,54 +429,6 @@ export function QuizExperience({
               <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
                 {getResultMeta(liveScore).title}. {getResultMeta(liveScore).description}
               </p>
-            </div>
-
-            <div className="space-y-2">
-              <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
-                Answer review
-              </p>
-              <div className="space-y-2">
-                {questions.map((question, index) => {
-                  const selectedLabel = answers[question.id] ?? "No answer";
-                  const correctLabel =
-                    question.options.find((option) => option.weight > 0)?.label ?? "Unknown";
-                  const isCorrect = selectedLabel === correctLabel;
-
-                  return (
-                    <div
-                      key={question.id}
-                      className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4"
-                    >
-                      <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/45 sm:text-xs">
-                        Question {index + 1}
-                      </p>
-                      <p className="mt-1 text-sm font-medium text-white sm:text-base">
-                        {question.prompt}
-                      </p>
-                      <div className="mt-2 grid gap-2 sm:grid-cols-2">
-                        <div
-                          className={`rounded-xl border px-3 py-2 text-xs sm:text-sm ${
-                            isCorrect
-                              ? "border-emerald-400/35 bg-emerald-500/10 text-emerald-100"
-                              : "border-red-400/30 bg-red-500/10 text-red-100"
-                          }`}
-                        >
-                          <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
-                            Your answer
-                          </span>
-                          <span className="mt-1 block font-medium">{selectedLabel}</span>
-                        </div>
-                        <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100 sm:text-sm">
-                          <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
-                            Correct answer
-                          </span>
-                          <span className="mt-1 block font-medium">{correctLabel}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
 
             <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
