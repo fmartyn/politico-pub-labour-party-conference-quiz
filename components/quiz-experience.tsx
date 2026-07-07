@@ -465,9 +465,6 @@ export function QuizExperience({
                           <span className="block text-sm font-medium text-white sm:text-base lg:text-[0.98rem]">
                             {option.label}
                           </span>
-                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6 lg:mt-1 lg:text-[0.8rem] lg:leading-4">
-                            {option.description}
-                          </span>
                         </div>
                       </div>
                     </button>
