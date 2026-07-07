@@ -15,7 +15,7 @@ export function QuizShell({ questions, capturePosition }: QuizShellProps) {
   const [refreshKey, setRefreshKey] = useState(0);
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:items-start lg:gap-4">
+    <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_16.25rem] lg:items-start lg:gap-3.5">
       <div>
         <QuizExperience
           questions={questions}

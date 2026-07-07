@@ -30,6 +30,8 @@ export function QuizExperience({
   capturePosition,
   onSubmissionSaved,
 }: QuizExperienceProps) {
+  const shareUrl = "https://london-playbook-summit-quiz.vercel.app/";
+  const shareText = "Try the Political Pro-Quiz and see where you land on the leaderboard.";
   const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [demographics, setDemographics] =
@@ -86,6 +88,20 @@ export function QuizExperience({
 
   function previousStep() {
     setStep((current) => current - 1);
+  }
+
+  async function shareQuiz() {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: eventName,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch {
+        // Ignore cancelled share actions.
+      }
+    }
   }
 
   async function persistSubmission(finalDurationMs: number) {
@@ -174,8 +190,8 @@ export function QuizExperience({
   return (
     <div className="relative">
       <div className="absolute -inset-2 rounded-[1.75rem] bg-[linear-gradient(135deg,rgba(245,177,63,0.2),rgba(217,54,50,0.16),rgba(255,143,120,0.12))] blur-xl sm:-inset-4 sm:rounded-[2rem] sm:blur-2xl" />
-      <div className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6 lg:p-5">
-        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6 sm:gap-4 lg:mb-4">
+      <div className="relative rounded-[1.5rem] border border-white/12 bg-[var(--panel)] p-4 shadow-[var(--shadow)] backdrop-blur-2xl sm:rounded-[2rem] sm:p-6 lg:p-4">
+        <div className="mb-4 flex items-center justify-between gap-3 sm:mb-6 sm:gap-4 lg:mb-3">
           <p className="text-sm font-medium text-white sm:text-lg lg:text-base">{statusLabel}</p>
           <div className="h-1.5 w-24 overflow-hidden rounded-full bg-white/10 sm:h-2 sm:w-28">
             <div
@@ -222,27 +238,55 @@ export function QuizExperience({
         ) : isIntroStep ? (
           <div
             key="intro"
-            className="grid gap-4 [animation:fade-in-up_0.35s_ease-out] lg:grid-cols-[1.15fr_0.8fr] lg:items-center"
+            className="grid gap-4 [animation:fade-in-up_0.35s_ease-out] lg:grid-cols-[1.15fr_0.72fr] lg:items-center"
           >
-            <div className="space-y-3 lg:space-y-2.5">
+            <div className="space-y-3 lg:space-y-2">
               <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
                 London Playbook challenge
               </div>
-              <h2 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-[2rem]">
+              <h2 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-[1.75rem]">
                 Forget the Golden Boot. Win a shoutout in London Playbook and secure Westminster bragging rights.
               </h2>
-              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7 lg:text-sm lg:leading-6">
-                Scan the QR code to share the quiz, then hit start and see where you land on the board.
+              <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7 lg:text-[0.9rem] lg:leading-5">
+                <span className="hidden lg:inline">
+                  Scan the QR code to share the quiz, then hit start and see where you land on the board.
+                </span>
+                <span className="lg:hidden">
+                  Share the quiz with friends or rivals, then hit start and see where you land on the board.
+                </span>
               </p>
+              <div className="flex flex-wrap gap-2.5 lg:hidden">
+                <button
+                  type="button"
+                  onClick={() => void shareQuiz()}
+                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/7"
+                >
+                  Share
+                </button>
+                <a
+                  href={`https://wa.me/?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/7"
+                >
+                  WhatsApp
+                </a>
+                <a
+                  href={`mailto:?subject=${encodeURIComponent(eventName)}&body=${encodeURIComponent(`${shareText}\n\n${shareUrl}`)}`}
+                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-white/7"
+                >
+                  Email
+                </a>
+              </div>
               <button
                 type="button"
                 onClick={nextStep}
-                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] sm:px-6 sm:py-3"
+                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] sm:px-6 sm:py-3 lg:px-5 lg:py-2.5"
               >
                 Start the quiz
               </button>
             </div>
-            <div className="mx-auto w-full max-w-[200px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] lg:max-w-[180px]">
+            <div className="mx-auto hidden w-full max-w-[200px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] lg:block lg:max-w-[160px] lg:p-2.5">
               <Image
                 src="/playbook-live-quiz-qr.jpeg"
                 alt="QR code for the Political Pro-Quiz"
@@ -390,9 +434,9 @@ export function QuizExperience({
         ) : (
           <div
             key={activeQuestion?.id}
-            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-6"
+            className="space-y-4 [animation:fade-in-up_0.35s_ease-out] sm:space-y-6 lg:space-y-4"
           >
-              <h2 className="text-[1.35rem] font-semibold leading-[1.15] sm:text-3xl lg:text-[2.15rem]">
+              <h2 className="text-[1.35rem] font-semibold leading-[1.15] sm:text-3xl lg:text-[1.7rem] lg:leading-[1.08]">
                 {activeQuestion?.prompt}
               </h2>
 
@@ -407,21 +451,21 @@ export function QuizExperience({
                       onClick={(event) =>
                         handleAnswer(activeQuestion.id, option.label, event.timeStamp)
                       }
-                      className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:p-3 ${
+                      className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:rounded-[1.4rem] lg:p-2.5 ${
                         selected
                           ? "border-[var(--accent)] bg-white/12"
                           : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
                       }`}
                     >
-                      <div className="flex items-start gap-3">
-                        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/6 text-xs font-semibold text-white sm:h-8 sm:w-8 sm:text-sm">
+                      <div className="flex items-start gap-3 lg:gap-2.5">
+                        <span className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-white/12 bg-white/6 text-xs font-semibold text-white sm:h-8 sm:w-8 sm:text-sm lg:h-7 lg:w-7 lg:text-xs">
                           {String.fromCharCode(65 + index)}
                         </span>
                         <div>
-                          <span className="block text-sm font-medium text-white sm:text-base lg:text-[1.05rem]">
+                          <span className="block text-sm font-medium text-white sm:text-base lg:text-[0.98rem]">
                             {option.label}
                           </span>
-                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6 lg:mt-1 lg:leading-5">
+                          <span className="mt-1.5 block text-xs leading-5 text-white/66 sm:mt-2 sm:text-sm sm:leading-6 lg:mt-1 lg:text-[0.8rem] lg:leading-4">
                             {option.description}
                           </span>
                         </div>
@@ -437,12 +481,12 @@ export function QuizExperience({
                 </p>
               ) : null}
 
-              <div className="flex flex-wrap justify-between gap-3 pt-1">
+              <div className="flex flex-wrap justify-between gap-3 pt-1 lg:pt-0">
                 <button
                   type="button"
                   onClick={previousStep}
                   disabled={step === 0 && capturePosition === "end"}
-                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-3"
+                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-3 lg:px-4 lg:py-2"
                 >
                   Back
                 </button>
@@ -451,7 +495,7 @@ export function QuizExperience({
                   type="button"
                   onClick={nextStep}
                   disabled={!canAdvance}
-                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
+                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3 lg:px-5 lg:py-2"
                 >
                   {step === questions.length - 1 ? "Prize draw" : "Next question"}
                 </button>
