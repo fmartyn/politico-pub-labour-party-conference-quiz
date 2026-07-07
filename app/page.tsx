@@ -32,9 +32,6 @@ export default function HomePage() {
               <p className="max-w-[48rem] text-sm leading-6 text-white/74 sm:text-base sm:leading-7 lg:text-[0.95rem] lg:leading-6">
                 Test your Westminster instincts with five questions inspired by the world of POLITICO Pro.
               </p>
-              <p className="hidden max-w-xl text-sm leading-6 text-white/62 xl:block">
-                Finish the quiz, get your score by email, and choose whether to enter the prize draw.
-              </p>
             </div>
           </div>
           <QuizShell questions={questions} capturePosition={capturePosition} />
