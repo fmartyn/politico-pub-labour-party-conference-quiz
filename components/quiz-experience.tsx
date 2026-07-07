@@ -1,10 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
-import { eventName, eventSlug, formatDuration, getResultMeta } from "@/lib/quiz";
+import {
+  eventName,
+  eventSlug,
+  formatDuration,
+  getResultMeta,
+  scoreAnswers,
+} from "@/lib/quiz";
 
 type QuizExperienceProps = {
   questions: Question[];
@@ -13,6 +19,12 @@ type QuizExperienceProps = {
 };
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
+type AnswerRevealState = {
+  questionId: string;
+  selectedLabel: string;
+  correctLabel: string;
+  isCorrect: boolean;
+};
 
 const initialDemographics: DemographicFields = {
   email: "",
@@ -41,13 +53,26 @@ export function QuizExperience({
   const [score, setScore] = useState<number | null>(null);
   const [durationMs, setDurationMs] = useState(0);
   const startedAtRef = useRef<number | null>(null);
+  const revealTimeoutRef = useRef<number | null>(null);
+  const [answerReveal, setAnswerReveal] = useState<AnswerRevealState | null>(null);
 
   const totalSteps = questions.length + 1;
   const displayStep = step < 0 ? 0 : step + 1;
   const isIntroStep = step === -1;
   const isPrizeStep = step === questions.length;
   const activeQuestion = step >= 0 && step < questions.length ? questions[step] : null;
+  const isRevealingAnswer = answerReveal?.questionId === activeQuestion?.id;
+  const revealedSelectedLabel = isRevealingAnswer ? answerReveal?.selectedLabel ?? null : null;
+  const revealedCorrectLabel = isRevealingAnswer ? answerReveal?.correctLabel ?? null : null;
+  const revealedAnswerIsCorrect = isRevealingAnswer ? answerReveal?.isCorrect ?? false : false;
   const canAdvance = activeQuestion ? Boolean(answers[activeQuestion.id]) : true;
+  const answerPayload: AnswerInput[] = questions.map((question) => ({
+    questionId: question.id,
+    prompt: question.prompt,
+    value: answers[question.id] ?? "",
+    weight: question.options.find((option) => option.label === answers[question.id])?.weight ?? 0,
+  }));
+  const liveScore = score ?? scoreAnswers(answerPayload);
   const canSubmit =
     !demographics.enterPrizeDraw ||
     (Boolean(demographics.firstName.trim()) &&
@@ -56,6 +81,14 @@ export function QuizExperience({
       Boolean(demographics.company.trim()) &&
       Boolean(demographics.jobTitle.trim()) &&
       demographics.privacyPolicyAccepted);
+
+  useEffect(() => {
+    return () => {
+      if (revealTimeoutRef.current !== null) {
+        window.clearTimeout(revealTimeoutRef.current);
+      }
+    };
+  }, []);
 
   function updateDemographicField<K extends keyof DemographicFields>(
     field: K,
@@ -83,10 +116,36 @@ export function QuizExperience({
       return;
     }
 
+    if (activeQuestion) {
+      const selectedLabel = answers[activeQuestion.id];
+      const correctLabel =
+        activeQuestion.options.find((option) => option.weight > 0)?.label ?? "";
+      const isCorrect = selectedLabel === correctLabel;
+
+      setAnswerReveal({
+        questionId: activeQuestion.id,
+        selectedLabel,
+        correctLabel,
+        isCorrect,
+      });
+
+      revealTimeoutRef.current = window.setTimeout(() => {
+        setAnswerReveal(null);
+        setStep((current) => current + 1);
+      }, 700);
+
+      return;
+    }
+
     setStep((current) => current + 1);
   }
 
   function previousStep() {
+    if (revealTimeoutRef.current !== null) {
+      window.clearTimeout(revealTimeoutRef.current);
+      revealTimeoutRef.current = null;
+    }
+    setAnswerReveal(null);
     setStep((current) => current - 1);
   }
 
@@ -107,14 +166,6 @@ export function QuizExperience({
   async function persistSubmission(finalDurationMs: number) {
     setSubmissionState("submitting");
     setErrorMessage("");
-
-    const answerPayload: AnswerInput[] = questions.map((question) => ({
-      questionId: question.id,
-      prompt: question.prompt,
-      value: answers[question.id] ?? "",
-      weight:
-        question.options.find((option) => option.label === answers[question.id])?.weight ?? 0,
-    }));
 
     const response = await fetch("/api/submissions", {
       method: "POST",
@@ -308,26 +359,78 @@ export function QuizExperience({
                 Want to enter the prize draw?
               </h2>
               <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
-                Your score is ready. If you want to be entered into the draw and hear more from POLITICO Pro, add your details below.
+                Your score is ready below. If you want to be entered into the draw and hear more from POLITICO Pro, add your details below.
               </p>
             </div>
 
-            {score !== null ? (
-              <div className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4">
-                <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
-                  Your score
-                </p>
-                <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">{score}/15</p>
+            <div className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4">
+              <div className="flex items-end justify-between gap-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
+                    Your score
+                  </p>
+                  <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">
+                    {liveScore}/15
+                  </p>
+                </div>
                 {durationMs > 0 ? (
-                  <p className="mt-2 text-xs leading-5 text-white/66 sm:text-sm sm:leading-6">
+                  <p className="text-right text-xs leading-5 text-white/66 sm:text-sm sm:leading-6">
                     Time to complete: {formatDuration(durationMs)}
                   </p>
                 ) : null}
-                <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
-                  {result?.title}. {result?.description}
-                </p>
               </div>
-            ) : null}
+              <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
+                {getResultMeta(liveScore).title}. {getResultMeta(liveScore).description}
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
+                Answer review
+              </p>
+              <div className="space-y-2">
+                {questions.map((question, index) => {
+                  const selectedLabel = answers[question.id] ?? "No answer";
+                  const correctLabel =
+                    question.options.find((option) => option.weight > 0)?.label ?? "Unknown";
+                  const isCorrect = selectedLabel === correctLabel;
+
+                  return (
+                    <div
+                      key={question.id}
+                      className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4"
+                    >
+                      <p className="text-[0.7rem] uppercase tracking-[0.2em] text-white/45 sm:text-xs">
+                        Question {index + 1}
+                      </p>
+                      <p className="mt-1 text-sm font-medium text-white sm:text-base">
+                        {question.prompt}
+                      </p>
+                      <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                        <div
+                          className={`rounded-xl border px-3 py-2 text-xs sm:text-sm ${
+                            isCorrect
+                              ? "border-emerald-400/35 bg-emerald-500/10 text-emerald-100"
+                              : "border-red-400/30 bg-red-500/10 text-red-100"
+                          }`}
+                        >
+                          <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
+                            Your answer
+                          </span>
+                          <span className="mt-1 block font-medium">{selectedLabel}</span>
+                        </div>
+                        <div className="rounded-xl border border-emerald-400/35 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-100 sm:text-sm">
+                          <span className="block text-[0.65rem] uppercase tracking-[0.2em] opacity-70 sm:text-[0.7rem]">
+                            Correct answer
+                          </span>
+                          <span className="mt-1 block font-medium">{correctLabel}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
 
             <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
               <input
@@ -451,10 +554,19 @@ export function QuizExperience({
                       onClick={(event) =>
                         handleAnswer(activeQuestion.id, option.label, event.timeStamp)
                       }
+                      disabled={isRevealingAnswer}
                       className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:rounded-[1.4rem] lg:p-2.5 ${
-                        selected
-                          ? "border-[var(--accent)] bg-white/12"
-                          : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
+                        isRevealingAnswer
+                          ? revealedSelectedLabel === option.label
+                            ? revealedAnswerIsCorrect
+                              ? "border-emerald-400/45 bg-emerald-500/12"
+                              : "border-red-400/45 bg-red-500/12"
+                            : revealedCorrectLabel === option.label && !revealedAnswerIsCorrect
+                              ? "border-emerald-400/35 bg-emerald-500/10"
+                              : "border-white/10 bg-white/6 opacity-70"
+                          : selected
+                            ? "border-[var(--accent)] bg-white/12"
+                            : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
                       }`}
                     >
                       <div className="flex items-start gap-3 lg:gap-2.5">
@@ -482,7 +594,7 @@ export function QuizExperience({
                 <button
                   type="button"
                   onClick={previousStep}
-                  disabled={step === 0 && capturePosition === "end"}
+                  disabled={step === 0 && capturePosition === "end" || isRevealingAnswer}
                   className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-3 lg:px-4 lg:py-2"
                 >
                   Back
@@ -491,10 +603,16 @@ export function QuizExperience({
                 <button
                   type="button"
                   onClick={nextStep}
-                  disabled={!canAdvance}
+                  disabled={!canAdvance || isRevealingAnswer}
                   className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3 lg:px-5 lg:py-2"
                 >
-                  {step === questions.length - 1 ? "Prize draw" : "Next question"}
+                  {isRevealingAnswer
+                    ? revealedAnswerIsCorrect
+                      ? "Correct"
+                      : "Not quite"
+                    : step === questions.length - 1
+                      ? "Prize draw"
+                      : "Next question"}
                 </button>
               </div>
           </div>
