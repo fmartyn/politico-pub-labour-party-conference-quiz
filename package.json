@@ -1,8 +1,8 @@
 {
-  "name": "london-playbook-summit-quiz",
+  "name": "politico-pub-labour-party-conference-quiz",
   "version": "1.0.0",
   "private": true,
-  "description": "Quiz app for London Playbook Summit with Vercel and Neon deployment flow.",
+  "description": "Quiz app for Politico Pub at Labour Party Conference with Vercel and Neon deployment flow.",
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",

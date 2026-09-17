@@ -1,6 +1,6 @@
-# London Playbook Summit Quiz
+# Politico Pub at Labour Party Conference Quiz
 
-This repository is a standalone Next.js app for a five-question summit quiz with demographic capture and Neon-backed submission storage.
+This repository is a standalone Next.js app for a five-question Politico Pub quiz with demographic capture and Neon-backed submission storage.
 
 ## Stack
 
@@ -36,7 +36,7 @@ npm run dev
 
 ## Neon setup
 
-1. Create a new Neon project specifically for this app, for example `london-playbook-summit-quiz`.
+1. Use the existing Neon connection for the first launch. The Labour Conference event uses its own `event_slug`, so its leaderboard and submissions remain separate from the summit quiz.
 2. Copy the connection string into `.env.local` as `DATABASE_URL`.
 3. In the Neon SQL editor, run the contents of [db/schema.sql](/Users/fmartyn/Documents/Quiz App/db/schema.sql).
 
@@ -51,9 +51,9 @@ npm run dev
 
 ## Recommended production names
 
-- GitHub repo: `london-playbook-summit-quiz`
-- Vercel project: `london-playbook-summit-quiz`
-- Neon project: `london-playbook-summit-quiz-db`
+- GitHub repo: `politico-pub-labour-party-conference-quiz`
+- Vercel project: `politico-pub-labour-party-conference-quiz`
+- Event slug: `politico-pub-labour-party-conference-quiz`
 
 ## What to customize next
 

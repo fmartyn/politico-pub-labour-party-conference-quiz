@@ -42,8 +42,8 @@ export function QuizExperience({
   capturePosition,
   onSubmissionSaved,
 }: QuizExperienceProps) {
-  const shareUrl = "https://london-playbook-summit-quiz.vercel.app/";
-  const shareText = "Try the Political Pro-Quiz and see where you land on the leaderboard.";
+  const shareUrl = typeof window === "undefined" ? "" : window.location.origin;
+  const shareText = `Try the ${eventName} and see where you land on the leaderboard.`;
   const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [demographics, setDemographics] =
@@ -340,10 +340,10 @@ export function QuizExperience({
           >
             <div className="space-y-3 lg:space-y-2">
               <div className="inline-flex rounded-full border border-[var(--accent)]/25 bg-[var(--accent)]/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-[var(--accent-3)]">
-                London Playbook challenge
+                Politico Pub challenge
               </div>
               <h2 className="text-2xl font-semibold leading-tight sm:text-3xl lg:text-[1.75rem]">
-                Forget the Golden Boot. Win a shoutout in London Playbook and secure Westminster bragging rights.
+                Put your Westminster knowledge to the test and secure bragging rights at the Politico Pub.
               </h2>
               <p className="text-sm leading-6 text-white/72 sm:text-base sm:leading-7 lg:text-[0.9rem] lg:leading-5">
                 <span className="hidden lg:inline">

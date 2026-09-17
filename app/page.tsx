@@ -30,7 +30,7 @@ export default function HomePage() {
                 {eventName}
               </h1>
               <p className="max-w-[48rem] text-sm leading-6 text-white/74 sm:text-base sm:leading-7 lg:text-[0.95rem] lg:leading-6">
-                Test your Westminster instincts with five questions inspired by the world of POLITICO Pro.
+                Test your Westminster instincts with five questions from the world of POLITICO.
               </p>
             </div>
           </div>
