@@ -386,7 +386,7 @@ export function QuizExperience({
             </div>
             <div className="mx-auto hidden w-full max-w-[200px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] lg:block lg:max-w-[160px] lg:p-2.5">
               <Image
-                src="/playbook-live-quiz-qr.jpeg"
+                src="/party-conference-quiz-2026.png"
                 alt="QR code for the Political Pro-Quiz"
                 width={420}
                 height={420}
