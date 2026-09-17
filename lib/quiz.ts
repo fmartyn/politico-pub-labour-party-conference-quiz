@@ -18,85 +18,110 @@ export type Question = {
 
 export const questions: Question[] = [
   {
-    id: "tech_ai_copyright",
-    prompt: "Which British director has been raking the government over the coals on AI and copyright?",
+    id: "tech_ai_development",
+    prompt: "Which of these people are NOT in favor of slowing down AI development to make sure it does not kill us all?",
     options: [
       {
-        label: "Ken Loach",
-        description: "A heavyweight director, but not the one leading this particular fight.",
+        label: "OpenAI boss Sam Altman",
+        description: "He has warned about the risks of increasingly powerful AI systems.",
         weight: 0,
       },
       {
-        label: "Danny Boyle",
-        description: "A recognisable name, but not the director at the centre of this copyright debate.",
-        weight: 0,
-      },
-      {
-        label: "Beeban Kidron",
-        description: "She has been one of the clearest voices challenging the government's approach.",
-        weight: 3,
-      },
-    ],
-  },
-  {
-    id: "fs_red_squirrel",
-    prompt: "The Investment Association-led and Rachel Reeves-backed campaign to get Brits investing in the stock market features which furry friend as its mascot?",
-    options: [
-      {
-        label: "A tabby cat",
-        description: "A respectable pet, but not the campaign creature in question.",
-        weight: 0,
-      },
-      {
-        label: "A red squirrel",
-        description: "That is the campaign mascot backing the push into retail investing.",
+        label: "President Donald Trump",
+        description: "The current answer, for now.",
         weight: 3,
       },
       {
-        label: "A raccoon",
-        description: "Wrong continent, wrong mascot.",
+        label: "Anthropic CEO Dario Amodei",
+        description: "He has publicly discussed the need to manage advanced AI risks.",
         weight: 0,
       },
     ],
   },
   {
-    id: "energy_split_trousers",
-    prompt: "Which top UK energy figure once split his trousers on his way to meet the king, as reported to Morning Energy and Climate UK readers in 2025?",
+    id: "tech_ai_agents_hacking",
+    prompt: "Which of these organizations accidentally hacked somewhere else when testing AI agents?",
     options: [
       {
-        label: "Energy Secretary Ed Miliband",
-        description: "A plausible Westminster mishap, but not the right protagonist.",
+        label: "Anthropic",
+        description: "One of the organizations associated with the reported testing incidents.",
         weight: 0,
       },
       {
-        label: "Octopus boss Greg Jackson",
-        description: "He was the figure at the centre of that memorable anecdote.",
+        label: "OpenAI",
+        description: "Another major AI lab, but not the complete answer.",
+        weight: 0,
+      },
+      {
+        label: "The UK AI Security Institute",
+        description: "A UK institution involved in AI safety and security testing.",
+        weight: 0,
+      },
+      {
+        label: "All of the above",
+        description: "The reported answer is that all three organizations did this while testing AI agents.",
+        weight: 3,
+      },
+    ],
+  },
+  {
+    id: "politics_no10_north",
+    prompt: "Which of the following is NOT in No. 10 North?",
+    options: [
+      {
+        label: "Hot-desking for ministers",
+        description: "One of the features reported to be in No. 10 North.",
+        weight: 0,
+      },
+      {
+        label: "An elevator with unmarked buttons for GCHQ",
+        description: "One of the unusual details associated with the building.",
+        weight: 0,
+      },
+      {
+        label: "A fake No. 10 door",
+        description: "Another reported feature of No. 10 North.",
+        weight: 0,
+      },
+      {
+        label: "A collection of the works of Alan Bennett",
+        description: "That is the odd one out and the correct answer.",
         weight: 3,
       },
       {
-        label: "Terrapower founder Bill Gates",
-        description: "Memorable enough, but not the answer here.",
+        label: "A cardboard cutout of Larry the Cat",
+        description: "A memorable detail reported to be in the building.",
         weight: 0,
       },
     ],
   },
   {
-    id: "trade_uk_eu_summit",
-    prompt: "When do officials hope to hold the delayed U.K.-EU summit?",
+    id: "politics_burnham_criticized",
+    prompt: "What has Andy Burnham NOT criticized?",
     options: [
       {
-        label: "Mid-October",
-        description: "That is the target window officials are aiming for.",
-        weight: 3,
-      },
-      {
-        label: "Mid-2027",
-        description: "That would be a delay of a very different order.",
+        label: "People who queue single-file in pubs",
+        description: "One of the habits he has criticized.",
         weight: 0,
       },
       {
-        label: "\"In due course\"",
-        description: "That sounds like classic official fog, but it is not the hoped-for timing.",
+        label: "People who play loud music on public transport",
+        description: "One of the habits he has criticized.",
+        weight: 0,
+      },
+      {
+        label: "People who add milk first to their tea",
+        description: "That is the correct answer. Burnham actually adds his milk first.",
+        weight: 3,
+      },
+      {
+        label: "People who use their phones too much at gigs",
+        description: "One of the habits he has criticized.",
+        weight: 0,
+      },
+      {
+        label: "People who applaud when the plane lands",
+        description: "One of the habits he has criticized.",
         weight: 0,
       },
     ],
