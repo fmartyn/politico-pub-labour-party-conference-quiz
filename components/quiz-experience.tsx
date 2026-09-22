@@ -78,10 +78,6 @@ export function QuizExperience({
   }
 
   function handleAnswer(questionId: string, option: string, startedAtMs: number) {
-    if (answers[questionId]) {
-      return;
-    }
-
     if (startedAtRef.current === null) {
       startedAtRef.current = startedAtMs;
     }
@@ -461,7 +457,6 @@ export function QuizExperience({
                       onClick={(event) =>
                         handleAnswer(activeQuestion.id, option.label, event.timeStamp)
                       }
-                      disabled={Boolean(answers[activeQuestion.id])}
                       className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:rounded-[1.4rem] lg:p-2.5 ${
                         selected
                           ? "border-[var(--accent)] bg-white/12"
