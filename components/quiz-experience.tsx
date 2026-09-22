@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { FormEvent, useEffect, useRef, useState } from "react";
+import { FormEvent, useRef, useState } from "react";
 
 import type { AnswerInput, CapturePosition, DemographicFields, Question } from "@/lib/quiz";
 import {
@@ -9,7 +9,6 @@ import {
   eventSlug,
   formatDuration,
   getResultMeta,
-  scoreAnswers,
 } from "@/lib/quiz";
 
 type QuizExperienceProps = {
@@ -19,12 +18,6 @@ type QuizExperienceProps = {
 };
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
-type AnswerRevealState = {
-  questionId: string;
-  selectedLabel: string;
-  correctLabel: string;
-  isCorrect: boolean;
-};
 
 const initialDemographics: DemographicFields = {
   email: "",
@@ -53,18 +46,12 @@ export function QuizExperience({
   const [score, setScore] = useState<number | null>(null);
   const [durationMs, setDurationMs] = useState(0);
   const startedAtRef = useRef<number | null>(null);
-  const revealTimeoutRef = useRef<number | null>(null);
-  const [answerReveal, setAnswerReveal] = useState<AnswerRevealState | null>(null);
 
   const totalSteps = questions.length + 1;
   const displayStep = step < 0 ? 0 : step + 1;
   const isIntroStep = step === -1;
   const isPrizeStep = step === questions.length;
   const activeQuestion = step >= 0 && step < questions.length ? questions[step] : null;
-  const isRevealingAnswer = answerReveal?.questionId === activeQuestion?.id;
-  const revealedSelectedLabel = isRevealingAnswer ? answerReveal?.selectedLabel ?? null : null;
-  const revealedCorrectLabel = isRevealingAnswer ? answerReveal?.correctLabel ?? null : null;
-  const revealedAnswerIsCorrect = isRevealingAnswer ? answerReveal?.isCorrect ?? false : false;
   const canAdvance = activeQuestion ? Boolean(answers[activeQuestion.id]) : true;
   const answerPayload: AnswerInput[] = questions.map((question) => ({
     questionId: question.id,
@@ -72,23 +59,13 @@ export function QuizExperience({
     value: answers[question.id] ?? "",
     weight: question.options.find((option) => option.label === answers[question.id])?.weight ?? 0,
   }));
-  const liveScore = score ?? scoreAnswers(answerPayload);
   const canSubmit =
-    !demographics.enterPrizeDraw ||
-    (Boolean(demographics.firstName.trim()) &&
-      Boolean(demographics.lastName.trim()) &&
-      Boolean(demographics.email.trim()) &&
-      Boolean(demographics.company.trim()) &&
-      Boolean(demographics.jobTitle.trim()) &&
-      demographics.privacyPolicyAccepted);
-
-  useEffect(() => {
-    return () => {
-      if (revealTimeoutRef.current !== null) {
-        window.clearTimeout(revealTimeoutRef.current);
-      }
-    };
-  }, []);
+    Boolean(demographics.firstName.trim()) &&
+    Boolean(demographics.lastName.trim()) &&
+    Boolean(demographics.email.trim()) &&
+    Boolean(demographics.company.trim()) &&
+    Boolean(demographics.jobTitle.trim()) &&
+    demographics.privacyPolicyAccepted;
 
   function updateDemographicField<K extends keyof DemographicFields>(
     field: K,
@@ -101,6 +78,10 @@ export function QuizExperience({
   }
 
   function handleAnswer(questionId: string, option: string, startedAtMs: number) {
+    if (answers[questionId]) {
+      return;
+    }
+
     if (startedAtRef.current === null) {
       startedAtRef.current = startedAtMs;
     }
@@ -116,37 +97,7 @@ export function QuizExperience({
       return;
     }
 
-    if (activeQuestion) {
-      const selectedLabel = answers[activeQuestion.id];
-      const correctLabel =
-        activeQuestion.options.find((option) => option.weight > 0)?.label ?? "";
-      const isCorrect = selectedLabel === correctLabel;
-
-      setAnswerReveal({
-        questionId: activeQuestion.id,
-        selectedLabel,
-        correctLabel,
-        isCorrect,
-      });
-
-      revealTimeoutRef.current = window.setTimeout(() => {
-        setAnswerReveal(null);
-        setStep((current) => current + 1);
-      }, 700);
-
-      return;
-    }
-
     setStep((current) => current + 1);
-  }
-
-  function previousStep() {
-    if (revealTimeoutRef.current !== null) {
-      window.clearTimeout(revealTimeoutRef.current);
-      revealTimeoutRef.current = null;
-    }
-    setAnswerReveal(null);
-    setStep((current) => current - 1);
   }
 
   async function shareQuiz() {
@@ -174,6 +125,7 @@ export function QuizExperience({
       },
       body: JSON.stringify({
         ...demographics,
+        enterPrizeDraw: true,
         answers: answerPayload,
         capturePosition,
         durationMs: finalDurationMs,
@@ -205,14 +157,8 @@ export function QuizExperience({
     event?.preventDefault();
 
     if (!canSubmit) {
-      if (demographics.enterPrizeDraw && !demographics.privacyPolicyAccepted) {
-        setSubmissionState("error");
-        setErrorMessage("Accept the privacy policy before submitting.");
-        return;
-      }
-
       setSubmissionState("error");
-      setErrorMessage("Add your details to enter the prize draw.");
+      setErrorMessage("Complete your details and accept the privacy policy to see your results.");
       return;
     }
 
@@ -328,9 +274,7 @@ export function QuizExperience({
                 </div>
               </div>
               <p className="text-sm leading-6 text-white/60 sm:leading-7">
-                {demographics.enterPrizeDraw
-                  ? "Your prize draw entry has been saved."
-                  : "You skipped the prize draw, but your quiz score is safely recorded."}
+                "Your prize draw entry and quiz answers have been saved."
               </p>
           </div>
         ) : isIntroStep ? (
@@ -403,51 +347,12 @@ export function QuizExperience({
           >
             <div className="space-y-1.5">
               <h2 className="text-xl font-semibold leading-tight sm:text-2xl lg:text-3xl">
-                Want to enter the prize draw?
+                Want to enter the prize draw and see your results?
               </h2>
               <p className="text-xs leading-5 text-white/68 sm:text-sm sm:leading-6">
-                Your score is ready below. If you want to be entered into the draw and hear more from POLITICO Pro, add your details below.
+                Enter your details below to unlock your score, review every answer, and enter the leaderboard.
               </p>
             </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/6 p-3 sm:rounded-3xl sm:p-4">
-              <div className="flex items-end justify-between gap-3">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.25em] text-white/50 sm:text-sm">
-                    Your score
-                  </p>
-                  <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">
-                    {liveScore}/30
-                  </p>
-                </div>
-                {durationMs > 0 ? (
-                  <p className="text-right text-xs leading-5 text-white/66 sm:text-sm sm:leading-6">
-                    Time to complete: {formatDuration(durationMs)}
-                  </p>
-                ) : null}
-              </div>
-              <p className="mt-2 text-xs leading-5 text-white/66 sm:mt-3 sm:text-sm sm:leading-6">
-                {getResultMeta(liveScore).title}. {getResultMeta(liveScore).description}
-              </p>
-            </div>
-
-            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
-              <input
-                type="checkbox"
-                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
-                checked={demographics.enterPrizeDraw}
-                onChange={(event) =>
-                  setDemographics((current) => ({
-                    ...current,
-                    enterPrizeDraw: event.target.checked,
-                    consentMarketing: event.target.checked,
-                  }))
-                }
-              />
-              <span>
-                Yes, enter me into the prize draw and keep me posted on POLITICO Pro updates and related offers.
-              </span>
-            </label>
 
             <div className="grid gap-2.5 sm:grid-cols-2 sm:gap-3">
               <Field
@@ -506,6 +411,18 @@ export function QuizExperience({
               </span>
             </label>
 
+            <label className="flex items-start gap-2.5 rounded-2xl border border-white/10 bg-white/6 p-2.5 text-xs leading-5 text-white/74 sm:gap-3 sm:p-3 sm:text-sm">
+              <input
+                type="checkbox"
+                className="mt-1 h-4 w-4 rounded border-white/20 bg-transparent"
+                checked={demographics.consentMarketing}
+                onChange={(event) => updateDemographicField("consentMarketing", event.target.checked)}
+              />
+              <span>
+                Keep me posted on POLITICO Pro updates and related offers.
+              </span>
+            </label>
+
             {errorMessage ? (
               <p className="rounded-2xl border border-red-300/20 bg-red-400/10 px-4 py-3 text-sm text-red-100">
                 {errorMessage}
@@ -514,22 +431,13 @@ export function QuizExperience({
 
             <div className="flex flex-wrap justify-between gap-2.5 pt-1">
               <button
-                type="button"
-                onClick={previousStep}
-                className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 sm:px-5 sm:py-3"
-              >
-                Back
-              </button>
-              <button
                 type="submit"
                 disabled={submissionState === "submitting"}
-                className="rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
+                className="ml-auto rounded-full bg-[linear-gradient(90deg,var(--accent),#ffcf70)] px-5 py-2.5 font-medium text-slate-900 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3"
               >
                 {submissionState === "submitting"
                   ? "Submitting..."
-                  : demographics.enterPrizeDraw
-                    ? "Save my entry"
-                    : "Finish"}
+                  : "Submit details and see results"}
               </button>
             </div>
           </form>
@@ -553,19 +461,11 @@ export function QuizExperience({
                       onClick={(event) =>
                         handleAnswer(activeQuestion.id, option.label, event.timeStamp)
                       }
-                      disabled={isRevealingAnswer}
+                      disabled={Boolean(answers[activeQuestion.id])}
                       className={`rounded-2xl border p-3 text-left transition sm:rounded-3xl sm:p-4 lg:rounded-[1.4rem] lg:p-2.5 ${
-                        isRevealingAnswer
-                          ? revealedSelectedLabel === option.label
-                            ? revealedAnswerIsCorrect
-                              ? "border-emerald-400/45 bg-emerald-500/12"
-                              : "border-red-400/45 bg-red-500/12"
-                            : revealedCorrectLabel === option.label && !revealedAnswerIsCorrect
-                              ? "border-emerald-400/35 bg-emerald-500/10"
-                              : "border-white/10 bg-white/6 opacity-70"
-                          : selected
-                            ? "border-[var(--accent)] bg-white/12"
-                            : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
+                        selected
+                          ? "border-[var(--accent)] bg-white/12"
+                          : "border-white/10 bg-white/6 hover:border-white/25 hover:bg-white/9"
                       }`}
                     >
                       <div className="flex items-start gap-3 lg:gap-2.5">
@@ -592,26 +492,11 @@ export function QuizExperience({
               <div className="flex flex-wrap justify-between gap-3 pt-1 lg:pt-0">
                 <button
                   type="button"
-                  onClick={previousStep}
-                  disabled={step === 0 && capturePosition === "end" || isRevealingAnswer}
-                  className="rounded-full border border-white/14 px-4 py-2.5 text-sm font-medium text-white/74 transition hover:bg-white/7 disabled:cursor-not-allowed disabled:opacity-35 sm:px-5 sm:py-3 lg:px-4 lg:py-2"
-                >
-                  Back
-                </button>
-
-                <button
-                  type="button"
                   onClick={nextStep}
-                  disabled={!canAdvance || isRevealingAnswer}
-                  className="rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3 lg:px-5 lg:py-2"
+                  disabled={!canAdvance}
+                  className="ml-auto rounded-full bg-[linear-gradient(90deg,var(--accent-2),var(--accent-4))] px-5 py-2.5 font-medium text-white transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60 sm:px-6 sm:py-3 lg:px-5 lg:py-2"
                 >
-                  {isRevealingAnswer
-                    ? revealedAnswerIsCorrect
-                      ? "Correct"
-                      : "Not quite"
-                    : step === questions.length - 1
-                      ? "Prize draw"
-                      : "Next question"}
+                  {step === questions.length - 1 ? "Continue" : "Next question"}
                 </button>
               </div>
           </div>
