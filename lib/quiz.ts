@@ -18,27 +18,6 @@ export type Question = {
 
 export const questions: Question[] = [
   {
-    id: "tech_ai_development",
-    prompt: "Which of these people are NOT in favor of slowing down AI development to make sure it does not kill us all?",
-    options: [
-      {
-        label: "OpenAI boss Sam Altman",
-        description: "He has warned about the risks of increasingly powerful AI systems.",
-        weight: 0,
-      },
-      {
-        label: "President Donald Trump",
-        description: "The current answer, for now.",
-        weight: 3,
-      },
-      {
-        label: "Anthropic CEO Dario Amodei",
-        description: "He has publicly discussed the need to manage advanced AI risks.",
-        weight: 0,
-      },
-    ],
-  },
-  {
     id: "tech_ai_agents_hacking",
     prompt: "Which of these organizations accidentally hacked somewhere else when testing AI agents?",
     options: [
@@ -62,6 +41,48 @@ export const questions: Question[] = [
         description: "The reported answer is that all three organizations did this while testing AI agents.",
         weight: 3,
       },
+    ],
+  },
+  {
+    id: "tech_ai_development",
+    prompt: "Which of these people are NOT in favor of slowing down AI development to make sure it does not kill us all?",
+    options: [
+      {
+        label: "OpenAI boss Sam Altman",
+        description: "He has warned about the risks of increasingly powerful AI systems.",
+        weight: 0,
+      },
+      {
+        label: "President Donald Trump",
+        description: "The current answer, for now.",
+        weight: 3,
+      },
+      {
+        label: "Anthropic CEO Dario Amodei",
+        description: "He has publicly discussed the need to manage advanced AI risks.",
+        weight: 0,
+      },
+    ],
+  },
+  {
+    id: "energy_cost_of_living",
+    prompt: "What did Andy Burnham promise for people worried about the cost of living in his first speech as PM?",
+    options: [
+      { label: "A £100 cheque", description: "Not the phrase used in the speech.", weight: 0 },
+      { label: "Free bus tickets", description: "Not the phrase used in the speech.", weight: 0 },
+      { label: "Wiggle room", description: "Not the phrase used in the speech.", weight: 0 },
+      { label: "A pint", description: "Not the phrase used in the speech.", weight: 0 },
+      { label: "Breathing space", description: "The phrase used in the speech.", weight: 3 },
+    ],
+  },
+  {
+    id: "energy_community_power",
+    prompt: "What could your local library become under Burnham's community power scheme?",
+    options: [
+      { label: "A nuclear power station", description: "Not the proposed community use.", weight: 0 },
+      { label: "A community-owned solar farm", description: "The proposed community use.", weight: 3 },
+      { label: "A grid connection point", description: "Not the proposed community use.", weight: 0 },
+      { label: "Ofgem's new headquarters", description: "Not the proposed community use.", weight: 0 },
     ],
   },
   {
@@ -127,24 +148,43 @@ export const questions: Question[] = [
     ],
   },
   {
-    id: "politics_fourth_of_july",
-    prompt: "Which prominent figure turned down an invitation to the U.S. Embassy's Fourth of July party last week due to a scheduling conflict?",
+    id: "trade_st_pancras_trains",
+    prompt: "By the end of the decade, how many trains could run between London St. Pancras and mainland Europe every hour?",
     options: [
-      {
-        label: "Prime Minister Keir Starmer",
-        description: "A fair guess, but not the figure in question.",
-        weight: 0,
-      },
-      {
-        label: "Former U.S. Ambassador Peter Mandelson",
-        description: "High profile, but not the one who declined on scheduling grounds.",
-        weight: 0,
-      },
-      {
-        label: "Makerfield MP Andy Burnham",
-        description: "He was the figure who could not make the embassy celebration.",
-        weight: 3,
-      },
+      { label: "Two", description: "Not the projected hourly total.", weight: 0 },
+      { label: "Three", description: "Not the projected hourly total.", weight: 0 },
+      { label: "Four", description: "The projected hourly total.", weight: 3 },
+      { label: "Five", description: "Not the projected hourly total.", weight: 0 },
+    ],
+  },
+  {
+    id: "trade_uk_eu_reset",
+    prompt: "Which of the following does not fall within the scope of the latest UK-EU reset negotiations?",
+    options: [
+      { label: "Food safety rules", description: "Within the scope of the negotiations.", weight: 0 },
+      { label: "Carbon pricing terms", description: "Within the scope of the negotiations.", weight: 0 },
+      { label: "Youth visas", description: "Within the scope of the negotiations.", weight: 0 },
+      { label: "Fishing quotas", description: "Outside the scope of the negotiations.", weight: 3 },
+    ],
+  },
+  {
+    id: "fs_bank_taxes",
+    prompt: "Which organisation is openly pushing for a hike in bank taxes?",
+    options: [
+      { label: "TheCityUK", description: "Not the organisation calling for the increase.", weight: 0 },
+      { label: "Unite the Union", description: "Not the organisation calling for the increase.", weight: 0 },
+      { label: "TUC", description: "The organisation calling for the increase.", weight: 3 },
+      { label: "GMB", description: "Not the organisation calling for the increase.", weight: 0 },
+    ],
+  },
+  {
+    id: "fs_ai_valuations",
+    prompt: "Who has not warned that soaring AI valuations could prompt a stock market correction?",
+    options: [
+      { label: "Andrew Bailey", description: "He has warned about the risks.", weight: 0 },
+      { label: "John Healey", description: "He is the correct answer.", weight: 3 },
+      { label: "Jamie Dimon", description: "He has warned about the risks.", weight: 0 },
+      { label: "Pablo Hernández de Cos", description: "He has warned about the risks.", weight: 0 },
     ],
   },
 ];
@@ -169,7 +209,7 @@ export const submissionSchema = z.object({
   enterPrizeDraw: z.boolean(),
   privacyPolicyAccepted: z.boolean(),
   consentMarketing: z.boolean(),
-  answers: z.array(answerSchema).length(5),
+  answers: z.array(answerSchema).length(10),
 }).superRefine((value, context) => {
   if (value.enterPrizeDraw && !z.email().safeParse(value.email).success) {
     context.addIssue({
@@ -247,21 +287,21 @@ export function formatDuration(durationMs: number) {
 }
 
 export function getResultMeta(score: number) {
-  if (score >= 13) {
+  if (score >= 25) {
     return {
       title: "Lobby Legend",
       description: "You read the room, the order paper, and probably the footnotes too.",
     };
   }
 
-  if (score >= 9) {
+  if (score >= 18) {
     return {
       title: "Policy Operator",
       description: "You are clearly fluent in the rhythms of Westminster and Whitehall.",
     };
   }
 
-  if (score >= 5) {
+  if (score >= 10) {
     return {
       title: "Committee Room Contender",
       description: "You know your way around the basics and you are one briefing away from sharp form.",

@@ -88,7 +88,7 @@ export function LeaderboardPanel({ refreshKey }: LeaderboardPanelProps) {
                 <p className="truncate text-[11px] text-white/58">{entry.company}</p>
               </div>
               <div className="text-right">
-                <p className="text-sm font-semibold text-white lg:text-[0.88rem]">{entry.score}/15</p>
+                <p className="text-sm font-semibold text-white lg:text-[0.88rem]">{entry.score}/30</p>
                 <p className="text-[11px] text-white/55">{formatDuration(entry.durationMs)}</p>
               </div>
             </div>

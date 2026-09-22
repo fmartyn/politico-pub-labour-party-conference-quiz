@@ -178,7 +178,7 @@ export function QuizExperience({
         capturePosition,
         durationMs: finalDurationMs,
         eventSlug,
-        quizVersion: "v1",
+        quizVersion: "v2",
       }),
     });
 
@@ -272,7 +272,7 @@ export function QuizExperience({
                   <p className="text-sm uppercase tracking-[0.25em] text-white/50">
                     Your score
                   </p>
-                  <p className="mt-2 text-4xl font-semibold text-white">{score}/15</p>
+                  <p className="mt-2 text-4xl font-semibold text-white">{score}/30</p>
                   {durationMs > 0 ? (
                     <p className="mt-2 text-sm text-white/66">
                       Finished in {formatDuration(durationMs)}
@@ -417,7 +417,7 @@ export function QuizExperience({
                     Your score
                   </p>
                   <p className="mt-1 text-3xl font-semibold text-white sm:mt-2 sm:text-4xl">
-                    {liveScore}/15
+                    {liveScore}/30
                   </p>
                 </div>
                 {durationMs > 0 ? (
