@@ -1,6 +1,6 @@
 # Politico Pub at Labour Party Conference Quiz
 
-This repository is a standalone Next.js app for a five-question Politico Pub quiz with demographic capture and Neon-backed submission storage.
+This repository is a standalone Next.js app for a ten-question Politico Pub quiz with demographic capture and Neon-backed submission storage.
 
 ## Stack
 
