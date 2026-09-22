@@ -36,7 +36,6 @@ export async function GET() {
       from ranked_entries
       where per_email_rank = 1
       order by score desc, duration_ms asc, created_at asc
-      limit 10
     `;
 
     const completionCount = await sql`

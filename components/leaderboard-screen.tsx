@@ -106,7 +106,7 @@ export function LeaderboardScreen() {
               </div>
             </div>
 
-            <div className="space-y-2">
+            <div className="grid max-h-[calc(100dvh-18rem)] gap-2 overflow-y-auto pr-1 sm:pr-2 md:grid-cols-2 md:content-start">
               {isLoading ? (
                 <div className="rounded-3xl border border-white/10 bg-white/7 p-6 text-white/70">
                   Loading leaderboard...
