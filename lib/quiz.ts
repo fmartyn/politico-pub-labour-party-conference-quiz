@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const eventName = "Politico Pub at Labour Party Conference Quiz";
+export const eventName = "Politico Pub Quiz at Labour Party Conference";
 export const eventSlug = "politico-pub-labour-party-conference-quiz";
 export type CapturePosition = "start" | "end";
 

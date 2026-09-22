@@ -35,6 +35,14 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+          <div className="flex justify-end">
+            <a
+              href="/leaderboard"
+              className="rounded-full border border-white/14 px-4 py-2 text-xs font-medium text-white/80 transition hover:bg-white/10 sm:text-sm"
+            >
+              Open full-screen leaderboard
+            </a>
+          </div>
           <QuizShell questions={questions} capturePosition={capturePosition} />
         </div>
       </section>
