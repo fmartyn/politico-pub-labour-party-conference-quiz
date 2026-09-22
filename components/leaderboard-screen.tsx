@@ -89,24 +89,24 @@ export function LeaderboardScreen() {
           </Link>
         </header>
 
-        <div className="grid flex-1 gap-8 py-8 lg:grid-cols-[minmax(0,1fr)_minmax(280px,360px)] lg:items-center lg:gap-12 lg:py-12">
+        <div className="grid flex-1 gap-6 py-6 lg:grid-cols-[minmax(0,1fr)_minmax(260px,330px)] lg:items-start lg:gap-10 lg:py-8">
           <section>
-            <div className="mb-5 flex flex-wrap items-end justify-between gap-3 sm:mb-7">
+            <div className="mb-4 flex flex-wrap items-end justify-between gap-3 sm:mb-5">
               <div>
-                <h2 className="text-3xl font-semibold sm:text-5xl">Fastest and most correct</h2>
-                <p className="mt-2 text-sm text-white/68 sm:text-base">
+                <h2 className="text-2xl font-semibold sm:text-4xl">Fastest and most correct</h2>
+                <p className="mt-1 text-xs text-white/68 sm:text-sm">
                   Ranked by score first, then completion time.
                 </p>
               </div>
-              <div className="text-right text-sm text-white/65 sm:text-base">
+              <div className="text-right text-xs text-white/65 sm:text-sm">
                 <p><span className="font-semibold text-white">{totalCompleted}</span> completed</p>
-                <p className="mt-1 text-xs text-white/45">
+                <p className="mt-0.5 text-[0.65rem] text-white/45">
                   {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}` : "Updating..."}
                 </p>
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {isLoading ? (
                 <div className="rounded-3xl border border-white/10 bg-white/7 p-6 text-white/70">
                   Loading leaderboard...
@@ -115,22 +115,22 @@ export function LeaderboardScreen() {
                 entries.map((entry) => (
                   <div
                     key={`${entry.rank}-${entry.name}-${entry.company}-${entry.durationMs}`}
-                    className={`grid grid-cols-[auto_1fr_auto] items-center gap-4 rounded-3xl border px-4 py-4 sm:px-6 sm:py-5 ${
+                    className={`grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-2xl border px-3 py-2.5 sm:gap-4 sm:px-4 sm:py-3 ${
                       entry.rank === 1
                         ? "border-[var(--accent)]/50 bg-[var(--accent)]/15"
                         : "border-white/10 bg-white/7"
                     }`}
                   >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/10 text-lg font-semibold sm:h-12 sm:w-12">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/10 text-sm font-semibold sm:h-9 sm:w-9 sm:text-base">
                       {entry.rank}
                     </div>
                     <div className="min-w-0">
-                      <p className="truncate text-lg font-semibold sm:text-2xl">{entry.name}</p>
-                      <p className="truncate text-sm text-white/58 sm:text-base">{entry.company}</p>
+                      <p className="truncate text-sm font-semibold sm:text-lg">{entry.name}</p>
+                      <p className="truncate text-xs text-white/58 sm:text-sm">{entry.company}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-lg font-semibold sm:text-2xl">{entry.score}/30</p>
-                      <p className="text-xs text-white/55 sm:text-sm">{formatDuration(entry.durationMs)}</p>
+                      <p className="text-sm font-semibold sm:text-lg">{entry.score}/30</p>
+                      <p className="text-[0.65rem] text-white/55 sm:text-xs">{formatDuration(entry.durationMs)}</p>
                     </div>
                   </div>
                 ))
@@ -142,7 +142,7 @@ export function LeaderboardScreen() {
             </div>
           </section>
 
-          <aside className="rounded-[2rem] border border-white/15 bg-white/95 p-5 text-center shadow-[var(--shadow)] sm:p-7">
+          <aside className="self-start rounded-[2rem] border border-white/15 bg-white/95 p-4 text-center shadow-[var(--shadow)] sm:p-5 lg:sticky lg:top-6">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f1b1e]">Play the quiz</p>
             <Image
               src="/party-conference-quiz-2026.png"
