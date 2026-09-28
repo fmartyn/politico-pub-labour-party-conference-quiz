@@ -145,7 +145,7 @@ export function LeaderboardScreen() {
           <aside className="self-start rounded-[2rem] border border-white/15 bg-white/95 p-4 text-center shadow-[var(--shadow)] sm:p-5 lg:sticky lg:top-6">
             <p className="text-xs font-semibold uppercase tracking-[0.28em] text-[#6f1b1e]">Play the quiz</p>
             <Image
-              src="/party-conference-quiz-2026.png"
+              src="/politico-pub-quiz-qr.png"
               alt="QR code for the Politico Pub Quiz"
               width={420}
               height={420}
