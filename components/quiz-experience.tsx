@@ -324,10 +324,10 @@ export function QuizExperience({
                 Start the quiz
               </button>
             </div>
-            <div className="mx-auto hidden w-full max-w-[200px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] lg:block lg:max-w-[160px] lg:p-2.5">
+            <div className="mx-auto w-full max-w-[180px] rounded-[1.5rem] border border-white/12 bg-white p-3 shadow-[var(--shadow)] sm:max-w-[200px] lg:max-w-[160px] lg:p-2.5">
               <Image
                 src="/party-conference-quiz-2026.png"
-                alt="QR code for the Political Pro-Quiz"
+                alt="QR code for the Politico Pub Quiz"
                 width={420}
                 height={420}
                 className="h-auto w-full rounded-xl"
